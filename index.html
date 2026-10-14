@@ -1,86 +1,280 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catálogo de Ropa - Venta por Catálogo</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
-    <header class="bg-white shadow-sm py-4 mb-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-3xl font-extrabold text-pink-600">Catálogo de Ropa Exclusiva</h1>
-        <p class="text-gray-500 mt-1">Elige tus prendas favoritas y pídelas al instante por WhatsApp</p>
-    </div>
-</header>
-
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow w-full mb-12">
-    <div id="contenedor-productos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <p id="cargando" class="col-span-full text-center text-gray-500 py-10 text-lg">Cargando productos...</p>
-    </div>
-</main>
-
-<footer class="bg-white border-t border-gray-200 py-6 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
-        &copy; 2026 Catálogo de Ropa. Todos los derechos reservados.
-    </div>
-</footer>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const contenedor = document.getElementById("contenedor-productos");
-        const numeroWhatsApp = "584121234567"; // Reemplaza con tu número de teléfono real (código de país + número)
-
-        fetch("api.php")
-            .then(response => response.json())
-            .then(resultado => {
-                contenedor.innerHTML = "";
-
-                if (resultado.estado === "success" && resultado.datos.length > 0) {
-                    resultado.datos.forEach(producto => {
-                        const mensaje = encodeURIComponent(`Hola, me interesa el producto "${producto.nombre}" con precio de $${producto.precio}. ¿Está disponible?`);
-                        const linkWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
-                        
-                        const imagenUrl = producto.url_imagen && producto.url_imagen.trim() !== "" 
-                            ? producto.url_imagen 
-                            : "https://via.placeholder.com/300x300?text=Sin+Imagen";
-
-                        const tarjeta = document.createElement("div");
-                        tarjeta.className = "bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between transition transform hover:-translate-y-1 hover:shadow-lg";
-
-                        tarjeta.innerHTML = `
-                            <div>
-                                <div class="h-48 w-full bg-gray-200 overflow-hidden relative">
-                                    <img src="${imagenUrl}" alt="${producto.nombre}" class="w-full h-full object-cover">
-                                    <span class="absolute top-2 right-2 bg-pink-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow">${producto.categoria || 'General'}</span>
-                                </div>
-                                <div class="p-4">
-                                    <h2 class="text-lg font-bold text-gray-900 mb-1">${producto.nombre}</h2>
-                                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">${producto.descripcion || 'Sin descripción disponible.'}</p>
-                                    <div class="flex flex-wrap gap-1 mb-3">
-                                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">Tallas: ${producto.tallas}</span>
-                                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">Colores: ${producto.colores}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-4 pt-0 flex items-center justify-between border-t border-gray-50 mt-2">
-                                <span class="text-xl font-black text-emerald-600">$${parseFloat(producto.precio).toFixed(2)}</span>
-                                <a href="${linkWhatsApp}" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition flex items-center gap-1 shadow-sm">
-                                    WhatsApp
-                                </a>
-                            </div>
-                        `;
-                        contenedor.appendChild(tarjeta);
-                    });
-                } else {
-                    contenedor.innerHTML = `<p class="col-span-full text-center text-gray-500 py-10 text-lg">No hay productos disponibles por el momento.</p>`;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma Multi-Tienda - Cloudflare Edge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                    }
                 }
-            })
-            .catch(error => {
-                console.error("Error al cargar la API:", error);
-                contenedor.innerHTML = `<p class="col-span-full text-center text-red-500 py-10 text-lg">Hubo un error al cargar los productos.</p>`;
+            }
+        }
+    </script>
+</head>
+<body class="bg-darkbg text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-white">
+
+    <!-- Header / Navbar Principal -->
+    <header class="w-full border-b border-slate-800 backdrop-blur-md bg-darkbg/80 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="regresarInicio()">
+                <div id="header-logo" class="h-10 w-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30 overflow-hidden border border-slate-700">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                </div>
+                <span id="header-store-name" class="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">MultiStore Cloud</span>
+            </div>
+            <div id="nav-info" class="text-sm text-slate-400 font-medium"></div>
+        </div>
+    </header>
+
+    <!-- Contenedor Principal / Vistas Dinámicas -->
+    <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full flex items-center justify-center">
+        
+        <!-- VISTA 1: Pantalla de Bienvenida Inicial (Soy Cliente / Soy Administrador) -->
+        <div id="view-welcome" class="max-w-4xl w-full text-center space-y-12 transition-all duration-300">
+            <div class="space-y-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    Plataforma Global Multi-Tienda
+                </span>
+                <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white">
+                    Bienvenido a tu ecosistema <span class="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">digital</span>
+                </h1>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Selecciona cómo deseas ingresar a la plataforma el día de hoy para continuar con tu experiencia personalizada.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto pt-4">
+                <!-- Botón Soy Cliente -->
+                <button onclick="mostrarVistaCliente()" class="group relative p-8 rounded-3xl bg-cardbg border border-slate-800 hover:border-amber-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 text-left flex flex-col justify-between">
+                    <div class="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl"></div>
+                    <div class="relative z-10 space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white group-hover:text-amber-400 transition-colors">Soy Cliente</h2>
+                            <p class="text-sm text-slate-400 mt-1">Explora catálogos de tiendas y realiza pedidos directos por WhatsApp.</p>
+                        </div>
+                    </div>
+                    <div class="relative z-10 pt-8 flex items-center text-sm font-semibold text-amber-400">
+                        <span>Explorar tiendas</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </button>
+
+                <!-- Botón Soy Administrador -->
+                <button onclick="window.location.href='login.html'" class="group relative p-8 rounded-3xl bg-cardbg border border-slate-800 hover:border-orange-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/10 text-left flex flex-col justify-between">
+                    <div class="absolute inset-0 bg-gradient-to-b from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl"></div>
+                    <div class="relative z-10 space-y-4">
+                        <div class="w-14 h-14 rounded-2xl bg-orange-500/10 text-orange-400 flex items-center justify-center border border-orange-500/20 group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white group-hover:text-orange-400 transition-colors">Soy Administrador</h2>
+                            <p class="text-sm text-slate-400 mt-1">Inicia sesión para gestionar el inventario y personalizar tu tienda.</p>
+                        </div>
+                    </div>
+                    <div class="relative z-10 pt-8 flex items-center text-sm font-semibold text-orange-400">
+                        <span>Iniciar sesión</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- VISTA 2: Selector o Listado General de Tiendas -->
+        <div id="vista-selector-tiendas" class="w-full space-y-8 hidden">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div>
+                    <button onclick="regresarInicio()" class="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center mb-1">
+                        ← Volver a la bienvenida
+                    </button>
+                    <h2 class="text-3xl font-black text-white">Explora nuestras tiendas asociadas</h2>
+                    <p class="text-slate-400 text-sm">Elige la tienda de tu preferencia para ver su catálogo exclusivo.</p>
+                </div>
+            </div>
+
+            <div class="max-w-md mx-auto">
+                <input type="text" id="input-buscar-tienda" oninput="filtrarTiendas()" placeholder="Buscar tienda por nombre..." class="w-full bg-cardbg border border-slate-800 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-amber-500 placeholder-slate-500 shadow-inner">
+            </div>
+
+            <div id="grid-lista-tiendas" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-4"></div>
+        </div>
+
+        <!-- VISTA 3: Vitrina de Productos de una Tienda Específica -->
+        <div id="vista-vitrina-productos" class="w-full space-y-8 hidden">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div>
+                    <button onclick="mostrarVistaCliente()" class="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center mb-1">
+                        ← Volver al listado de tiendas
+                    </button>
+                    <h2 id="vitrina-titulo" class="text-2xl font-black text-white">Catálogo de Productos</h2>
+                    <p class="text-xs text-slate-400">Selecciona una prenda para hacer tu pedido vía WhatsApp.</p>
+                </div>
+            </div>
+
+            <div id="grid-productos-tienda" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        Plataforma Multi-Tienda Cloudflare Edge &copy; 2026.
+    </footer>
+
+    <!-- Importamos el archivo central -->
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slugTienda = obtenerParametroURL('tienda');
+            const db = obtenerBaseDatos();
+
+            if (slugTienda && db[slugTienda]) {
+                cargarVitrinaTienda(slugTienda, db);
+            } else {
+                regresarInicio();
+            }
+        });
+
+        function mostrarVistaCliente() {
+            document.getElementById('view-welcome').classList.add('hidden');
+            document.getElementById('vista-vitrina-productos').classList.add('hidden');
+            document.getElementById('vista-selector-tiendas').classList.remove('hidden');
+
+            const db = obtenerBaseDatos();
+            renderizarListaTiendas(db);
+        }
+
+        function cargarVitrinaTienda(slugTienda, db) {
+            document.getElementById('view-welcome').classList.add('hidden');
+            document.getElementById('vista-selector-tiendas').classList.add('hidden');
+            document.getElementById('vista-vitrina-productos').classList.remove('hidden');
+
+            const tienda = db[slugTienda];
+            const colorTienda = tienda.colorPrimario || "#f59e0b";
+            
+            document.getElementById('header-store-name').textContent = tienda.nombreTienda;
+            if (tienda.logoUrl) {
+                document.getElementById('header-logo').innerHTML = `<img src="${tienda.logoUrl}" class="w-full h-full object-cover">`;
+            }
+
+            document.getElementById('vitrina-titulo').textContent = `Catálogo de ${tienda.nombreTienda}`;
+
+            const gridProductos = document.getElementById('grid-productos-tienda');
+            gridProductos.innerHTML = "";
+
+            if (tienda.productos.length === 0) {
+                gridProductos.innerHTML = `<p class="col-span-full text-center text-slate-500 py-10">Esta tienda aún no tiene productos registrados.</p>`;
+                return;
+            }
+
+            tienda.productos.forEach(prod => {
+                const mensaje = encodeURIComponent(`Hola, me interesa el producto "${prod.nombre}" ($${parseFloat(prod.precio).toFixed(2)}). ¿Está disponible?`);
+                const linkWhatsApp = `https://wa.me/${tienda.whatsapp}?text=${mensaje}`;
+
+                gridProductos.innerHTML += `
+                    <div class="bg-cardbg border border-slate-800 rounded-2xl overflow-hidden flex flex-col justify-between shadow-lg">
+                        <div>
+                            <div class="h-48 w-full bg-slate-800 overflow-hidden relative">
+                                <img src="${prod.url_imagen}" alt="${prod.nombre}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-5 space-y-2">
+                                <h3 class="font-bold text-lg text-white">${prod.nombre}</h3>
+                                <p class="text-sm text-slate-400 line-clamp-2">${prod.descripcion}</p>
+                                <div class="flex flex-wrap gap-1 pt-1">
+                                    <span class="text-xs bg-slate-900 text-slate-300 px-2 py-0.5 rounded border border-slate-800">Tallas: ${prod.tallas}</span>
+                                    <span class="text-xs bg-slate-900 text-slate-300 px-2 py-0.5 rounded border border-slate-800">${prod.colores}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex items-center justify-between mt-2">
+                            <span class="text-xl font-black text-emerald-400">$${parseFloat(prod.precio).toFixed(2)}</span>
+                            <a href="${linkWhatsApp}" target="_blank" style="background-color: ${colorTienda};" class="hover:opacity-90 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1 shadow-md">
+                                Pedir por WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                `;
             });
-    });
-</script>
+        }
+
+        function renderizarListaTiendas(tiendasObj) {
+            const gridTiendas = document.getElementById('grid-lista-tiendas');
+            gridTiendas.innerHTML = "";
+            const slugs = Object.keys(tiendasObj);
+
+            if (slugs.length === 0) {
+                gridTiendas.innerHTML = `<p class="col-span-full text-center text-slate-500 py-10">No hay tiendas registradas.</p>`;
+                return;
+            }
+
+            slugs.forEach(slug => {
+                const tienda = tiendasObj[slug];
+                const colorAccento = tienda.colorPrimario || "#f59e0b";
+                const logoHtml = tienda.logoUrl ? `<img src="${tienda.logoUrl}" class="w-full h-full object-cover">` : `<span class="text-xl font-bold" style="color: ${colorAccento}">${tienda.nombreTienda.charAt(0)}</span>`;
+
+                gridTiendas.innerHTML += `
+                    <div onclick="window.location.href='index.html?tienda=${slug}'" class="bg-cardbg border border-slate-800 rounded-3xl p-6 cursor-pointer hover:border-slate-600 transition-all hover:shadow-xl flex flex-col justify-between space-y-4 group">
+                        <div class="flex items-center space-x-4">
+                            <div class="h-14 w-14 rounded-2xl bg-slate-800 flex items-center justify-center overflow-hidden border border-slate-700 group-hover:scale-105 transition-transform">
+                                ${logoHtml}
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-white group-hover:text-amber-400 transition-colors">${tienda.nombreTienda}</h3>
+                                <p class="text-xs text-slate-400">${tienda.productos.length} productos disponibles</p>
+                            </div>
+                        </div>
+                        <div class="pt-2 flex items-center justify-between text-xs font-semibold" style="color: ${colorAccento}">
+                            <span>Visitar catálogo</span>
+                            <span>→</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filtrarTiendas() {
+            const texto = document.getElementById('input-buscar-tienda').value.toLowerCase();
+            const db = obtenerBaseDatos();
+            const tiendasFiltradas = {};
+
+            Object.keys(db).forEach(slug => {
+                if (db[slug].nombreTienda.toLowerCase().includes(texto)) {
+                    tiendasFiltradas[slug] = db[slug];
+                }
+            });
+
+            renderizarListaTiendas(tiendasFiltradas);
+        }
+
+        function regresarInicio() {
+            window.history.pushState({}, '', window.location.pathname);
+            document.getElementById('vista-selector-tiendas').classList.add('hidden');
+            document.getElementById('vista-vitrina-productos').classList.add('hidden');
+            document.getElementById('view-welcome').classList.remove('hidden');
+
+            document.getElementById('header-store-name').textContent = "MultiStore Cloud";
+            document.getElementById('header-logo').innerHTML = `<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>`;
+        }
+    </script>
 </body>
 </html>
