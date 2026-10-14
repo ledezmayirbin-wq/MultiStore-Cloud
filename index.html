@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo de Ropa - Venta por Catálogo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+    <header class="bg-white shadow-sm py-4 mb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-3xl font-extrabold text-pink-600">Catálogo de Ropa Exclusiva</h1>
+        <p class="text-gray-500 mt-1">Elige tus prendas favoritas y pídelas al instante por WhatsApp</p>
+    </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow w-full mb-12">
+    <div id="contenedor-productos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <p id="cargando" class="col-span-full text-center text-gray-500 py-10 text-lg">Cargando productos...</p>
+    </div>
+</main>
+
+<footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400">
+        &copy; 2026 Catálogo de Ropa. Todos los derechos reservados.
+    </div>
+</footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const contenedor = document.getElementById("contenedor-productos");
+        const numeroWhatsApp = "584121234567"; // Reemplaza con tu número de teléfono real (código de país + número)
+
+        fetch("api.php")
+            .then(response => response.json())
+            .then(resultado => {
+                contenedor.innerHTML = "";
+
+                if (resultado.estado === "success" && resultado.datos.length > 0) {
+                    resultado.datos.forEach(producto => {
+                        const mensaje = encodeURIComponent(`Hola, me interesa el producto "${producto.nombre}" con precio de $${producto.precio}. ¿Está disponible?`);
+                        const linkWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
+                        
+                        const imagenUrl = producto.url_imagen && producto.url_imagen.trim() !== "" 
+                            ? producto.url_imagen 
+                            : "https://via.placeholder.com/300x300?text=Sin+Imagen";
+
+                        const tarjeta = document.createElement("div");
+                        tarjeta.className = "bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between transition transform hover:-translate-y-1 hover:shadow-lg";
+
+                        tarjeta.innerHTML = `
+                            <div>
+                                <div class="h-48 w-full bg-gray-200 overflow-hidden relative">
+                                    <img src="${imagenUrl}" alt="${producto.nombre}" class="w-full h-full object-cover">
+                                    <span class="absolute top-2 right-2 bg-pink-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow">${producto.categoria || 'General'}</span>
+                                </div>
+                                <div class="p-4">
+                                    <h2 class="text-lg font-bold text-gray-900 mb-1">${producto.nombre}</h2>
+                                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">${producto.descripcion || 'Sin descripción disponible.'}</p>
+                                    <div class="flex flex-wrap gap-1 mb-3">
+                                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">Tallas: ${producto.tallas}</span>
+                                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded">Colores: ${producto.colores}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 pt-0 flex items-center justify-between border-t border-gray-50 mt-2">
+                                <span class="text-xl font-black text-emerald-600">$${parseFloat(producto.precio).toFixed(2)}</span>
+                                <a href="${linkWhatsApp}" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition flex items-center gap-1 shadow-sm">
+                                    WhatsApp
+                                </a>
+                            </div>
+                        `;
+                        contenedor.appendChild(tarjeta);
+                    });
+                } else {
+                    contenedor.innerHTML = `<p class="col-span-full text-center text-gray-500 py-10 text-lg">No hay productos disponibles por el momento.</p>`;
+                }
+            })
+            .catch(error => {
+                console.error("Error al cargar la API:", error);
+                contenedor.innerHTML = `<p class="col-span-full text-center text-red-500 py-10 text-lg">Hubo un error al cargar los productos.</p>`;
+            });
+    });
+</script>
+</body>
+</html>
