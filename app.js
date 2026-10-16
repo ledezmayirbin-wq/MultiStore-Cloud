@@ -2,7 +2,7 @@
  * Cerebro Central de la Plataforma Multi-Tienda (Cloudflare D1 Conectado)
  */
 
-const API_BASE_URL = 'https://tienda1.ledezmayirbin.workers.dev/api';
+const API_BASE_URL = 'https://api-multistore.ledezmayirbin.workers.dev/api';
 
 /**
  * Obtiene la base de datos completa conectándose a Cloudflare D1 mediante el Worker.
