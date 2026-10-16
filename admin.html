@@ -22,7 +22,6 @@
 </head>
 <body class="bg-darkbg text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-white">
 <style>
-    /* Forzar estilos oscuros absolutos en todos los inputs, textareas y selects, anulando Bootstrap */
     input[type="text"],
     input[type="password"],
     input[type="email"],
@@ -37,7 +36,6 @@
         border-color: #334155 !important;
     }
 
-    /* Evitar que el autocompletado del navegador ponga fondo blanco/amarillo */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -49,7 +47,6 @@
         transition: background-color 5000s ease-in-out 0s;
     }
 
-    /* Efecto al hacer clic o escribir (Focus) con borde ámbar brillante */
     input:focus,
     textarea:focus,
     select:focus,
@@ -60,7 +57,6 @@
         box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
     }
 
-    /* Color del texto placeholder (ej. "Ej. tia_marta") */
     ::placeholder {
         color: #64748b !important;
         opacity: 1 !important;
@@ -137,7 +133,7 @@
                 </div>
 
                 <div class="col-12 text-end pt-2">
-                    <button type="submit" class="btn btn-warning fw-bold px-6 py-2.5 rounded-xl text-sm shadow-lg">
+                    <button type="submit" id="btn-guardar-tienda" class="btn btn-warning fw-bold px-6 py-2.5 rounded-xl text-sm shadow-lg">
                         Guardar Cambios de Tienda
                     </button>
                 </div>
@@ -172,7 +168,7 @@
         </section>
     </main>
 
-    <!-- MODAL PRODUCTO ACTUALIZADO (Sin URL de texto, con selector local y vista previa) -->
+    <!-- MODAL PRODUCTO -->
     <div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-cardbg border border-slate-800 text-white rounded-3xl p-4 shadow-2xl">
@@ -204,13 +200,11 @@
                             <input type="text" id="prod-colores" placeholder="Rojo, Azul" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl">
                         </div>
 
-                        <!-- NUEVO: Selector de archivo local para la foto del producto -->
                         <div class="col-md-6">
                             <label class="form-label text-xs font-semibold text-slate-400 uppercase">Foto del Producto</label>
                             <input type="file" id="prod-file-input" accept="image/*" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-xs py-2">
                         </div>
 
-                        <!-- Vista previa instantánea de la foto del producto -->
                         <div class="col-12 text-center">
                             <div id="prod-img-preview-box" class="hidden mt-1 p-2 bg-slate-900/60 rounded-xl border border-slate-800 inline-block">
                                 <img id="prod-img-preview" class="w-20 h-20 object-cover rounded-lg mx-auto shadow-sm">
@@ -226,7 +220,7 @@
 
                         <div class="col-12 text-end pt-3">
                             <button type="button" class="btn btn-secondary rounded-xl px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-warning fw-bold rounded-xl px-4 text-dark">Guardar Producto</button>
+                            <button type="submit" id="btn-guardar-prod" class="btn btn-warning fw-bold rounded-xl px-4 text-dark">Guardar Producto</button>
                         </div>
                     </form>
                 </div>
@@ -241,30 +235,35 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
     <script>
-        let tiendaSlug = localStorage.getItem('sesion_vendedor');
+        let tiendaSlug = (localStorage.getItem('sesion_vendedor') || "").trim().toLowerCase();
         let modalBootstrap;
         let base64LogotipoTemp = "";
-        let base64ProductoTemp = ""; // Variable temporal para la foto del producto actual
+        let base64ProductoTemp = "";
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             if (!tiendaSlug) {
                 window.location.href = 'login.html';
                 return;
             }
             modalBootstrap = new bootstrap.Modal(document.getElementById('modalProducto'));
-            cargarPanelAdmin();
             configurarDragAndDropLogo();
             configurarInputProductoFoto();
+            await cargarPanelAdmin();
         });
 
-        function cargarPanelAdmin() {
-            const db = obtenerBaseDatos();
+        async function cargarPanelAdmin() {
+            const db = await obtenerBaseDatos();
             const tienda = db[tiendaSlug];
 
-            if (!tienda) { window.location.href = 'login.html'; return; }
+            if (!tienda) { 
+                alert("Sesión no encontrada o expirada. Por favor, inicia sesión nuevamente.");
+                localStorage.removeItem('sesion_vendedor');
+                window.location.href = 'login.html'; 
+                return; 
+            }
 
-            document.getElementById('config-nombre').value = tienda.nombreTienda;
-            document.getElementById('config-whatsapp').value = tienda.whatsapp;
+            document.getElementById('config-nombre').value = tienda.nombreTienda || "";
+            document.getElementById('config-whatsapp').value = tienda.whatsapp || "";
             document.getElementById('config-color').value = tienda.colorPrimario || "#f59e0b";
             base64LogotipoTemp = tienda.logoUrl || "";
 
@@ -275,13 +274,11 @@
                 mostrarVistaPreviaLogo(base64LogotipoTemp);
             }
 
-            renderizarTablaProductos();
+            await renderizarTablaProductos();
         }
 
         function configurarDragAndDropLogo() {
-            const dropZone = document.getElementById('drop-zone');
             const fileInput = document.getElementById('file-logo-input');
-
             fileInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) procesarArchivo(file, (base64) => {
@@ -299,7 +296,6 @@
                     base64ProductoTemp = base64;
                     document.getElementById('prod-imagen-base64').value = base64;
                     
-                    // Mostrar miniatura de vista previa en el modal
                     const box = document.getElementById('prod-img-preview-box');
                     const img = document.getElementById('prod-img-preview');
                     img.src = base64;
@@ -329,25 +325,35 @@
 
         async function guardarConfiguracionTienda(event) {
             event.preventDefault();
-            const db = obtenerBaseDatos();
-            
-            db[tiendaSlug].nombreTienda = document.getElementById('config-nombre').value.trim();
-            db[tiendaSlug].whatsapp = document.getElementById('config-whatsapp').value.trim();
-            db[tiendaSlug].colorPrimario = document.getElementById('config-color').value;
-            db[tiendaSlug].logoUrl = base64LogotipoTemp;
+            const btn = document.getElementById('btn-guardar-tienda');
+            btn.disabled = true;
+            btn.textContent = "Guardando...";
 
-            await guardarBaseDatos(db);
-            mostrarAlertaSync("¡Configuración guardada exitosamente!");
-            cargarPanelAdmin();
+            try {
+                const db = await obtenerBaseDatos();
+                if (!db[tiendaSlug]) db[tiendaSlug] = {};
+                
+                db[tiendaSlug].nombreTienda = document.getElementById('config-nombre').value.trim();
+                db[tiendaSlug].whatsapp = document.getElementById('config-whatsapp').value.trim();
+                db[tiendaSlug].colorPrimario = document.getElementById('config-color').value;
+                db[tiendaSlug].logoUrl = base64LogotipoTemp;
+
+                await guardarBaseDatos(db);
+                mostrarAlertaSync("¡Configuración guardada exitosamente!");
+                await cargarPanelAdmin();
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Guardar Cambios de Tienda";
+            }
         }
 
-        function renderizarTablaProductos() {
-            const db = obtenerBaseDatos();
+        async function renderizarTablaProductos() {
+            const db = await obtenerBaseDatos();
             const tienda = db[tiendaSlug];
             const tabla = document.getElementById('tabla-productos-admin');
             tabla.innerHTML = "";
 
-            if (tienda.productos.length === 0) {
+            if (!tienda || !tienda.productos || tienda.productos.length === 0) {
                 tabla.innerHTML = `<tr><td colspan="4" class="text-center py-5 text-secondary">No hay productos registrados.</td></tr>`;
                 return;
             }
@@ -357,15 +363,15 @@
                     <tr>
                         <td class="py-3 px-4">
                             <div class="d-flex align-items-center gap-3">
-                                <img src="${prod.url_imagen}" class="rounded-3 object-fit-cover" width="45" height="45">
+                                <img src="${prod.url_imagen || ''}" class="rounded-3 object-fit-cover" width="45" height="45">
                                 <div>
                                     <span class="fw-bold text-white d-block">${prod.nombre}</span>
-                                    <small class="text-secondary text-truncate d-inline-block" style="max-width: 250px;">${prod.descripcion}</small>
+                                    <small class="text-secondary text-truncate d-inline-block" style="max-width: 250px;">${prod.descripcion || ''}</small>
                                 </div>
                             </div>
                         </td>
-                        <td class="py-3 px-4 fw-bold text-success">$${parseFloat(prod.precio).toFixed(2)}</td>
-                        <td class="py-3 px-4 text-secondary small">Tallas: ${prod.tallas} <br> Colores: ${prod.colores}</td>
+                        <td class="py-3 px-4 fw-bold text-success">$${parseFloat(prod.precio || 0).toFixed(2)}</td>
+                        <td class="py-3 px-4 text-secondary small">Tallas: ${prod.tallas || 'Única'} <br> Colores: ${prod.colores || 'Varios'}</td>
                         <td class="py-3 px-4 text-end">
                             <button onclick="abrirModalProducto(${index})" class="btn btn-outline-warning btn-sm rounded-pill px-3 me-1">Editar</button>
                             <button onclick="eliminarProducto(${index})" class="btn btn-outline-danger btn-sm rounded-pill px-3">Eliminar</button>
@@ -375,12 +381,12 @@
             });
         }
 
-        function abrirModalProducto(index = -1) {
-            const db = obtenerBaseDatos();
+        async function abrirModalProducto(index = -1) {
+            const db = await obtenerBaseDatos();
             const tienda = db[tiendaSlug];
             const box = document.getElementById('prod-img-preview-box');
 
-            if (index > -1) {
+            if (index > -1 && tienda && tienda.productos && tienda.productos[index]) {
                 const prod = tienda.productos[index];
                 document.getElementById('modal-titulo').textContent = "Editar Producto";
                 document.getElementById('prod-index').value = index;
@@ -390,9 +396,9 @@
                 document.getElementById('prod-colores').value = prod.colores;
                 document.getElementById('prod-descripcion').value = prod.descripcion;
                 
-                base64ProductoTemp = prod.url_imagen;
-                document.getElementById('prod-imagen-base64').value = prod.url_imagen;
-                document.getElementById('prod-img-preview').src = prod.url_imagen;
+                base64ProductoTemp = prod.url_imagen || "";
+                document.getElementById('prod-imagen-base64').value = prod.url_imagen || "";
+                document.getElementById('prod-img-preview').src = prod.url_imagen || "";
                 box.classList.remove('hidden');
             } else {
                 document.getElementById('modal-titulo').textContent = "Agregar Nuevo Producto";
@@ -406,43 +412,54 @@
 
         async function guardarProductoModal(event) {
             event.preventDefault();
-            const db = obtenerBaseDatos();
-            const index = parseInt(document.getElementById('prod-index').value);
-            const imagenFinal = document.getElementById('prod-imagen-base64').value || base64ProductoTemp;
+            const btn = document.getElementById('btn-guardar-prod');
+            btn.disabled = true;
+            btn.textContent = "Guardando...";
 
-            if (!imagenFinal) {
-                alert("Por favor, selecciona una imagen para el producto.");
-                return;
+            try {
+                const db = await obtenerBaseDatos();
+                const index = parseInt(document.getElementById('prod-index').value);
+                const imagenFinal = document.getElementById('prod-imagen-base64').value || base64ProductoTemp;
+
+                if (!imagenFinal) {
+                    alert("Por favor, selecciona una imagen para el producto.");
+                    return;
+                }
+
+                const nuevoProd = {
+                    nombre: document.getElementById('prod-nombre').value.trim(),
+                    precio: parseFloat(document.getElementById('prod-precio').value),
+                    tallas: document.getElementById('prod-tallas').value.trim(),
+                    colores: document.getElementById('prod-colores').value.trim(),
+                    url_imagen: imagenFinal,
+                    descripcion: document.getElementById('prod-descripcion').value.trim()
+                };
+
+                if (!db[tiendaSlug].productos) db[tiendaSlug].productos = [];
+
+                if (index > -1) {
+                    db[tiendaSlug].productos[index] = nuevoProd;
+                } else {
+                    db[tiendaSlug].productos.push(nuevoProd);
+                }
+
+                await guardarBaseDatos(db);
+                modalBootstrap.hide();
+                mostrarAlertaSync("¡Producto guardado correctamente!");
+                await renderizarTablaProductos();
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Guardar Producto";
             }
-
-            const nuevoProd = {
-                nombre: document.getElementById('prod-nombre').value.trim(),
-                precio: parseFloat(document.getElementById('prod-precio').value),
-                tallas: document.getElementById('prod-tallas').value.trim(),
-                colores: document.getElementById('prod-colores').value.trim(),
-                url_imagen: imagenFinal,
-                descripcion: document.getElementById('prod-descripcion').value.trim()
-            };
-
-            if (index > -1) {
-                db[tiendaSlug].productos[index] = nuevoProd;
-            } else {
-                db[tiendaSlug].productos.push(nuevoProd);
-            }
-
-            await guardarBaseDatos(db);
-            modalBootstrap.hide();
-            mostrarAlertaSync("¡Producto guardado correctamente!");
-            renderizarTablaProductos();
         }
 
         async function eliminarProducto(index) {
             if (confirm("¿Estás seguro de eliminar este producto?")) {
-                const db = obtenerBaseDatos();
+                const db = await obtenerBaseDatos();
                 db[tiendaSlug].productos.splice(index, 1);
                 await guardarBaseDatos(db);
                 mostrarAlertaSync("Producto eliminado.");
-                renderizarTablaProductos();
+                await renderizarTablaProductos();
             }
         }
 
@@ -453,7 +470,8 @@
 
         function mostrarAlertaSync(mensaje) {
             const alerta = document.getElementById('sync-alert');
-            alerta.textContent = mensaje;
+            const texto = document.getElementById('sync-message');
+            texto.textContent = mensaje;
             alerta.classList.remove('d-none');
             setTimeout(() => { alerta.classList.add('d-none'); }, 3000);
         }
