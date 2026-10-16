@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso y Registro - MultiStore Cloud</title>
-    <!-- Tailwind CSS v3 CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -22,7 +21,6 @@
 </head>
 <body class="bg-darkbg text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-white">
 <style>
-    /* Forzar estilos oscuros absolutos en todos los inputs, textareas y selects, anulando Bootstrap */
     input[type="text"],
     input[type="password"],
     input[type="email"],
@@ -37,7 +35,6 @@
         border-color: #334155 !important;
     }
 
-    /* Evitar que el autocompletado del navegador ponga fondo blanco/amarillo */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -49,7 +46,6 @@
         transition: background-color 5000s ease-in-out 0s;
     }
 
-    /* Efecto al hacer clic o escribir (Focus) con borde ámbar brillante */
     input:focus,
     textarea:focus,
     select:focus,
@@ -60,7 +56,6 @@
         box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
     }
 
-    /* Color del texto placeholder (ej. "Ej. tia_marta") */
     ::placeholder {
         color: #64748b !important;
         opacity: 1 !important;
@@ -109,7 +104,7 @@
                         Usuario o contraseña incorrectos.
                     </div>
 
-                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-amber-600/20 mt-2">
+                    <button type="submit" id="login-btn-submit" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-amber-600/20 mt-2">
                         Acceder al Panel
                     </button>
                 </form>
@@ -122,7 +117,7 @@
                 </div>
             </div>
 
-            <!-- REGISTRO FORM (Limpio y rápido) -->
+            <!-- REGISTRO FORM -->
             <div id="section-registro" class="space-y-6 hidden">
                 <div>
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-3">
@@ -156,7 +151,7 @@
                         Error al registrar.
                     </div>
 
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-emerald-600/20 mt-2">
+                    <button type="submit" id="reg-btn-submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-emerald-600/20 mt-2">
                         Registrar y Abrir mi Tienda
                     </button>
                 </form>
@@ -191,19 +186,27 @@
             }
         }
 
-        function manejarLogin(event) {
+        async function manejarLogin(event) {
             event.preventDefault();
-            const usuarioInput = document.getElementById('login-user').value.trim();
+            const usuarioInput = document.getElementById('login-user').value.trim().toLowerCase().replace(/\s+/g, '_');
             const passInput = document.getElementById('login-pass').value.trim();
             const errorDiv = document.getElementById('login-error');
-            const db = obtenerBaseDatos();
+            const btn = document.getElementById('login-btn-submit');
 
-            if (db[usuarioInput] && db[usuarioInput].pass === passInput) {
-                errorDiv.classList.add('hidden');
-                localStorage.setItem('sesion_vendedor', usuarioInput);
+            errorDiv.classList.add('hidden');
+            btn.disabled = true;
+            btn.textContent = "Verificando...";
+
+            try {
+                const sesion = await iniciarSesionTienda({ usuario: usuarioInput, password: passInput });
+                localStorage.setItem('sesion_vendedor', sesion.slug);
                 window.location.href = 'admin.html';
-            } else {
+            } catch (err) {
+                errorDiv.textContent = err.message || "Usuario o contraseña incorrectos.";
                 errorDiv.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Acceder al Panel";
             }
         }
 
@@ -214,6 +217,11 @@
             const nombreTienda = document.getElementById('reg-nombre').value.trim();
             const whatsapp = document.getElementById('reg-whatsapp').value.trim();
             const errorDiv = document.getElementById('reg-error');
+            const btn = document.getElementById('reg-btn-submit');
+
+            errorDiv.classList.add('hidden');
+            btn.disabled = true;
+            btn.textContent = "Creando tienda...";
 
             try {
                 await registrarNuevaTienda({ usuario, password, nombreTienda, whatsapp });
@@ -222,6 +230,9 @@
             } catch (error) {
                 errorDiv.textContent = error.message;
                 errorDiv.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Registrar y Abrir mi Tienda";
             }
         }
     </script>
