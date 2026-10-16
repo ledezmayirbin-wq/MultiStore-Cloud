@@ -1,110 +1,82 @@
 /**
- * Cerebro Central de la Plataforma Multi-Tienda (Cloudflare Edge Ready)
- * Este archivo gestiona la base de datos global simulada, el manejo de URLs 
- * y las funciones asíncronas listas para conectar con APIs en la nube.
+ * Cerebro Central de la Plataforma Multi-Tienda (Cloudflare D1 Conectado)
  */
 
-const DB_STORAGE_KEY = 'multi_tiendas_db';
-
-// Base de datos inicial con tiendas de prueba (incluyendo soporte para colorPrimario)
-const baseDatosInicial = {
-    "tia_marta": {
-        pass: "1234",
-        nombreTienda: "Modas Tía Marta",
-        logoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
-        colorPrimario: "#f59e0b", // Ámbar por defecto
-        whatsapp: "584121234567",
-        productos: [
-            { 
-                nombre: "Blusa Elegante Floral", 
-                descripcion: "Blusa fresca ideal para verano con estampado de flores.", 
-                precio: 25.50, 
-                tallas: "S, M, L", 
-                colores: "Rojo, Azul", 
-                url_imagen: "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=500&q=80" 
-            }
-        ]
-    },
-    "sofia_style": {
-        pass: "5678",
-        nombreTienda: "Boutique Sofía",
-        logoUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80",
-        colorPrimario: "#f59e0b",
-        whatsapp: "584149876543",
-        productos: [
-            { 
-                nombre: "Vestido de Noche Verano", 
-                descripcion: "Vestido elegante y sofisticado para ocasiones especiales.", 
-                precio: 45.00, 
-                tallas: "S, M", 
-                colores: "Negro, Esmeralda", 
-                url_imagen: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=500&q=80" 
-            }
-        ]
-    }
-};
+const API_BASE_URL = 'https://tienda1.ledezmayirbin.workers.dev/api';
 
 /**
- * Obtiene la base de datos completa. Si no existe en el navegador, 
- * la inicializa automáticamente con los datos por defecto.
+ * Obtiene la base de datos completa conectándose a Cloudflare D1 mediante el Worker.
+ * Si falla la red, utiliza un respaldo local del navegador.
  */
-function obtenerBaseDatos() {
-    let db = localStorage.getItem(DB_STORAGE_KEY);
-    if (!db) {
-        localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(baseDatosInicial));
-        return baseDatosInicial;
+async function obtenerBaseDatos() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/obtener-db`);
+        if (!response.ok) throw new Error("Error al conectar con la base de datos en la nube.");
+        const data = await response.json();
+        
+        // Si la base de datos en la nube está completamente vacía, retorna un objeto vacío
+        if (!data || Object.keys(data).length === 0) {
+            return {};
+        }
+        
+        return data;
+    } catch (err) {
+        console.error("Usando respaldo local por fallo de red:", err);
+        let dbLocal = localStorage.getItem('multi_tiendas_db');
+        if (!dbLocal) {
+            let dbVacia = {};
+            localStorage.setItem('multi_tiendas_db', JSON.stringify(dbVacia));
+            return dbVacia;
+        }
+        return JSON.parse(dbLocal);
     }
-    return JSON.parse(db);
 }
 
 /**
- * Guarda o actualiza la base de datos de manera asíncrona.
- * Preparado para futura integración con Cloudflare Worker o base de datos D1.
+ * Guarda o actualiza la base de datos completa enviándola al Cloudflare Worker.
  */
 async function guardarBaseDatos(nuevaDb) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(nuevaDb));
-            
-            /* 
-               EJEMPLO DE INTEGRACIÓN FUTURA CON CLOUDFLARE WORKER / API:
-               fetch('https://tu-api.workers.dev/actualizar-db', {
-                   method: 'POST',
-                   headers: { 'Content-Type': 'application/json' },
-                   body: JSON.stringify(nuevaDb)
-               }).catch(err => console.error("Error sincronizando con Cloudflare:", err));
-            */
+    try {
+        localStorage.setItem('multi_tiendas_db', JSON.stringify(nuevaDb)); // Respaldo local
 
-            resolve(true);
-        }, 300);
-    });
+        const response = await fetch(`${API_BASE_URL}/guardar-db`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevaDb)
+        });
+
+        if (!response.ok) throw new Error("No se pudo sincronizar con Cloudflare D1.");
+        return true;
+    } catch (err) {
+        console.error("Error al guardar en la nube:", err);
+        return false;
+    }
 }
 
 /**
- * Registro rápido y limpio (Sin URL de logotipo obligatoria al inicio)
+ * Registro rápido y limpio conectado directamente a la API en la nube
  */
 async function registrarNuevaTienda({ usuario, password, nombreTienda, whatsapp }) {
-    let db = obtenerBaseDatos();
-    
-    if (db[usuario]) {
-        throw new Error("El nombre de usuario o identificador de tienda ya está en uso. Elige otro.");
+    try {
+        const response = await fetch(`${API_BASE_URL}/registrar-tienda`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuario, password, nombreTienda, whatsapp })
+        });
+
+        const resultado = await response.json();
+        if (!response.ok) {
+            throw new Error(resultado.error || "El nombre de usuario o identificador de tienda ya está en uso. Elige otro.");
+        }
+
+        return true;
+    } catch (err) {
+        throw new Error(err.message);
     }
-
-    db[usuario] = {
-        pass: password,
-        nombreTienda: nombreTienda,
-        logoUrl: "",
-        colorPrimario: "#f59e0b", // Color por defecto
-        whatsapp: whatsapp,
-        productos: []
-    };
-
-    await guardarBaseDatos(db);
-    return true;
 }
 
 /**
- * Utilidad global para extraer parámetros limpios de la URL (ej: ?tienda=tia_marta)
+ * Utilidad global para extraer parámetros limpios de la URL (ej: ?tienda=tu_tienda)
  */
 function obtenerParametroURL(nombre) {
     const urlParams = new URLSearchParams(window.location.search);
