@@ -80,7 +80,7 @@
     <main class="flex-grow flex items-center justify-center px-4 py-12">
         <div class="max-w-md w-full bg-cardbg border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6">
             
-            <!-- LOGIN FORM -->
+            <!-- FORMULARIO DE INICIO DE SESIÓN -->
             <div id="section-login" class="space-y-6">
                 <div>
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-3">
@@ -117,14 +117,14 @@
                 </div>
             </div>
 
-            <!-- REGISTRO FORM -->
+            <!-- FORMULARIO DE REGISTRO -->
             <div id="section-registro" class="space-y-6 hidden">
                 <div>
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-3">
                         Nuevo Comercio
                     </span>
                     <h2 class="text-2xl font-black text-white">Crea tu Tienda</h2>
-                    <p class="text-sm text-slate-400 mt-1">Registro rápido. Podrás añadir tu logotipo y personalizar tus colores luego en el panel.</p>
+                    <p class="text-sm text-slate-400 mt-1">Registro rápido. Podrás añadir tu logotipo y personalizar tu tienda en el panel.</p>
                 </div>
 
                 <form id="registro-form" onsubmit="manejarRegistro(event)" class="space-y-4">
@@ -198,13 +198,25 @@
             btn.textContent = "Verificando...";
 
             try {
-                const db = await obtenerBaseDatos();
-                
-                if (db[usuarioInput] && db[usuarioInput].pass === passInput) {
-                    localStorage.setItem('sesion_vendedor', usuarioInput);
-                    window.location.href = 'admin.html';
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario: usuarioInput, password: passInput })
+                });
+
+                const resultado = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(resultado.error || "Usuario o contraseña incorrectos.");
+                }
+
+                // Validar el rol que responde el Worker de forma segura
+                if (resultado.rol === "superadmin") {
+                    localStorage.setItem('sesion_superadmin', resultado.slug);
+                    window.location.href = 'superadmin.html';
                 } else {
-                    throw new Error("Usuario o contraseña incorrectos.");
+                    localStorage.setItem('sesion_vendedor', resultado.slug);
+                    window.location.href = 'admin.html';
                 }
             } catch (err) {
                 errorDiv.textContent = err.message || "Usuario o contraseña incorrectos.";
@@ -214,7 +226,6 @@
                 btn.textContent = "Acceder al Panel";
             }
         }
-
         async function manejarRegistro(event) {
             event.preventDefault();
             const usuario = document.getElementById('reg-user').value.trim().toLowerCase().replace(/\s+/g, '_');
@@ -231,6 +242,8 @@
             try {
                 await registrarNuevaTienda({ usuario, password, nombreTienda, whatsapp });
                 localStorage.setItem('sesion_vendedor', usuario);
+                // Pre-cargar la base de datos actualizada para que admin.html la encuentre sin problemas
+                await obtenerBaseDatos();
                 window.location.href = 'admin.html';
             } catch (error) {
                 errorDiv.textContent = error.message;
