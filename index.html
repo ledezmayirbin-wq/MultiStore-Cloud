@@ -19,12 +19,12 @@
         }
     </script>
 </head>
-<body class="bg-darkbg text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-white">
+<body id="page-body" class="bg-darkbg text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-white">
 
-    <header class="w-full border-b border-slate-800 backdrop-blur-md bg-darkbg/80 sticky top-0 z-50">
+    <header class="w-full border-b border-slate-800/80 backdrop-blur-md bg-darkbg/80 sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="regresarInicio()">
-                <div id="header-logo" class="h-10 w-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30 overflow-hidden border border-slate-700">
+            <div class="flex items-center space-x-3 cursor-pointer group" onclick="regresarInicio()">
+                <div id="header-logo" class="h-11 w-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30 overflow-hidden border border-slate-700 group-hover:scale-105 transition-transform">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                     </svg>
@@ -35,15 +35,16 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full flex items-center justify-center">
+    <!-- Contenedor principal ajustado para que suba todo de manera uniforme -->
+    <main class="max-w-7xl mx-auto px-6 py-8 flex-grow w-full">
         
         <!-- VISTA 1: Bienvenida -->
-        <div id="view-welcome" class="max-w-4xl w-full text-center space-y-12 transition-all duration-300">
+        <div id="view-welcome" class="max-w-4xl mx-auto text-center space-y-12 transition-all duration-300 pt-8">
             <div class="space-y-4">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                <span class="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-sm">
                     Plataforma Global Multi-Tienda
                 </span>
-                <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white">
+                <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
                     Bienvenido a tu ecosistema <span class="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">digital</span>
                 </h1>
                 <p class="text-lg text-slate-400 max-w-2xl mx-auto">
@@ -101,7 +102,7 @@
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div>
                     <button onclick="regresarInicio()" class="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center mb-1">
-                        ← Volver a la bienvenida
+                        ← Volver al inicio
                     </button>
                     <h2 class="text-3xl font-black text-white">Explora nuestras tiendas asociadas</h2>
                     <p class="text-slate-400 text-sm">Elige la tienda de tu preferencia para ver su catálogo exclusivo.</p>
@@ -138,12 +139,14 @@
 
     <script src="app.js"></script>
     <script>
+        let dbCache = null;
+
         document.addEventListener('DOMContentLoaded', async () => {
             const slugTienda = obtenerParametroURL('tienda');
-            const db = await obtenerBaseDatos();
+            dbCache = await obtenerBaseDatos();
 
-            if (slugTienda && db[slugTienda]) {
-                cargarVitrinaTienda(slugTienda, db);
+            if (slugTienda && dbCache[slugTienda]) {
+                cargarVitrinaTienda(slugTienda, dbCache);
             } else {
                 regresarInicio();
             }
@@ -154,8 +157,8 @@
             document.getElementById('vista-vitrina-productos').classList.add('hidden');
             document.getElementById('vista-selector-tiendas').classList.remove('hidden');
 
-            const db = await obtenerBaseDatos();
-            renderizarListaTiendas(db);
+            dbCache = await obtenerBaseDatos();
+            renderizarListaTiendas(dbCache);
         }
 
         function cargarVitrinaTienda(slugTienda, db) {
@@ -164,8 +167,22 @@
             document.getElementById('vista-vitrina-productos').classList.remove('hidden');
 
             const tienda = db[slugTienda];
-            const colorTienda = tienda.colorPrimario || "#f59e0b";
-            
+
+            // 🛑 VALIDACIÓN DE TIENDA BLOQUEADA O SUSPENDIDA
+            const estaBloqueada = tienda.bloqueado === 1 || tienda.bloqueado === true;
+            if (estaBloqueada) {
+                document.getElementById('vista-vitrina-productos').innerHTML = `
+                    <div class="max-w-md mx-auto text-center py-20 space-y-4 bg-cardbg border border-slate-800 rounded-3xl p-8 shadow-2xl">
+                        <div class="w-16 h-16 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/20">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <h2 class="text-2xl font-black text-white">Tienda Temporalmente Suspendida</h2>
+                        <p class="text-sm text-slate-400">Este comercio se encuentra inactivo en este momento por actualización de suscripción o falta de pago. Por favor, intenta más tarde.</p>
+                        <button onclick="regresarInicio()" class="btn btn-warning fw-bold rounded-xl px-6 py-2.5 text-xs text-dark mt-2">← Volver al inicio</button>
+                    </div>
+                `;
+                return;
+            }
             document.getElementById('header-store-name').textContent = tienda.nombreTienda;
             if (tienda.logoUrl) {
                 document.getElementById('header-logo').innerHTML = `<img src="${tienda.logoUrl}" class="w-full h-full object-cover">`;
@@ -177,32 +194,39 @@
             gridProductos.innerHTML = "";
 
             if (!tienda.productos || tienda.productos.length === 0) {
-                gridProductos.innerHTML = `<p class="col-span-full text-center text-slate-500 py-10">Esta tienda aún no tiene productos registrados.</p>`;
+                gridProductos.innerHTML = `<p class="col-span-full text-center text-slate-500 py-12 text-sm bg-cardbg/40 border border-slate-800 rounded-2xl">Esta tienda aún no tiene productos registrados.</p>`;
                 return;
             }
 
+            const whatsappLimpio = (tienda.whatsapp || "").replace(/\D/g, '');
+
             tienda.productos.forEach(prod => {
-                const mensaje = encodeURIComponent(`Hola, me interesa el producto "${prod.nombre}" ($${parseFloat(prod.precio).toFixed(2)}). ¿Está disponible?`);
-                const linkWhatsApp = `https://wa.me/${tienda.whatsapp}?text=${mensaje}`;
+                const mensaje = encodeURIComponent(`Hola, me interesa el producto "${prod.nombre}" ($${parseFloat(prod.precio || 0).toFixed(2)}). ¿Está disponible?`);
+                const linkWhatsApp = `https://wa.me/${whatsappLimpio}?text=${mensaje}`;
 
                 gridProductos.innerHTML += `
-                    <div class="bg-cardbg border border-slate-800 rounded-2xl overflow-hidden flex flex-col justify-between shadow-lg">
+                    <div class="group bg-cardbg border border-slate-800/80 hover:border-amber-500/50 rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300 hover:-translate-y-1.5">
                         <div>
-                            <div class="h-48 w-full bg-slate-800 overflow-hidden relative">
-                                <img src="${prod.url_imagen || ''}" alt="${prod.nombre}" class="w-full h-full object-cover">
+                            <div class="h-56 w-full bg-slate-900 overflow-hidden relative">
+                                <img src="${prod.url_imagen || ''}" alt="${prod.nombre}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-60"></div>
                             </div>
-                            <div class="p-5 space-y-2">
-                                <h3 class="font-bold text-lg text-white">${prod.nombre}</h3>
-                                <p class="text-sm text-slate-400 line-clamp-2">${prod.descripcion || ''}</p>
-                                <div class="flex flex-wrap gap-1 pt-1">
-                                    <span class="text-xs bg-slate-900 text-slate-300 px-2 py-0.5 rounded border border-slate-800">Tallas: ${prod.tallas || 'Única'}</span>
-                                    <span class="text-xs bg-slate-900 text-slate-300 px-2 py-0.5 rounded border border-slate-800">${prod.colores || 'Varios'}</span>
+                            <div class="p-6 space-y-3">
+                                <h3 class="font-bold text-lg text-white group-hover:text-amber-400 transition-colors">${prod.nombre}</h3>
+                                <p class="text-sm text-slate-400 line-clamp-2 leading-relaxed">${prod.descripcion || 'Sin descripción disponible.'}</p>
+                                <div class="flex flex-wrap gap-1.5 pt-1">
+                                    <span class="text-[11px] font-medium bg-slate-900/80 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-800 shadow-inner">Tallas: ${prod.tallas || 'Única'}</span>
+                                    <span class="text-[11px] font-medium bg-slate-900/80 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-800 shadow-inner">Colores: ${prod.colores || 'Varios'}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="p-5 pt-0 flex items-center justify-between mt-2">
-                            <span class="text-xl font-black text-emerald-400">$${parseFloat(prod.precio || 0).toFixed(2)}</span>
-                            <a href="${linkWhatsApp}" target="_blank" style="background-color: ${colorTienda};" class="hover:opacity-90 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1 shadow-md">
+                        <div class="p-6 pt-0 flex items-center justify-between mt-2">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Precio</span>
+                                <span class="text-2xl font-black text-emerald-400">$${parseFloat(prod.precio || 0).toFixed(2)}</span>
+                            </div>
+                            <a href="${linkWhatsApp}" target="_blank" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-4 py-3 rounded-2xl transition-all duration-300 shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/40 flex items-center gap-1.5 transform active:scale-95">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                                 Pedir por WhatsApp
                             </a>
                         </div>
@@ -214,22 +238,21 @@
         function renderizarListaTiendas(tiendasObj) {
             const gridTiendas = document.getElementById('grid-lista-tiendas');
             gridTiendas.innerHTML = "";
-            const slugs = Object.keys(tiendasObj);
+            const slugs = Object.keys(tiendasObj || {});
 
             if (slugs.length === 0) {
-                gridTiendas.innerHTML = `<p class="col-span-full text-center text-slate-500 py-10">No hay tiendas registradas.</p>`;
+                gridTiendas.innerHTML = `<p class="col-span-full text-center text-slate-500 py-12">No hay tiendas registradas.</p>`;
                 return;
             }
 
             slugs.forEach(slug => {
                 const tienda = tiendasObj[slug];
-                const colorAccento = tienda.colorPrimario || "#f59e0b";
-                const logoHtml = tienda.logoUrl ? `<img src="${tienda.logoUrl}" class="w-full h-full object-cover">` : `<span class="text-xl font-bold" style="color: ${colorAccento}">${tienda.nombreTienda.charAt(0)}</span>`;
+                const logoHtml = tienda.logoUrl ? `<img src="${tienda.logoUrl}" class="w-full h-full object-cover">` : `<span class="text-xl font-bold text-amber-400">${(tienda.nombreTienda || 'T').charAt(0)}</span>`;
 
                 gridTiendas.innerHTML += `
-                    <div onclick="window.location.href='index.html?tienda=${slug}'" class="bg-cardbg border border-slate-800 rounded-3xl p-6 cursor-pointer hover:border-slate-600 transition-all hover:shadow-xl flex flex-col justify-between space-y-4 group">
+                    <div onclick="window.location.href='index.html?tienda=${slug}'" class="bg-cardbg border border-slate-800/80 hover:border-slate-600 rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col justify-between space-y-4 group">
                         <div class="flex items-center space-x-4">
-                            <div class="h-14 w-14 rounded-2xl bg-slate-800 flex items-center justify-center overflow-hidden border border-slate-700 group-hover:scale-105 transition-transform">
+                            <div class="h-14 w-14 rounded-2xl bg-slate-900 flex items-center justify-center overflow-hidden border border-slate-700/80 group-hover:scale-105 transition-transform">
                                 ${logoHtml}
                             </div>
                             <div>
@@ -237,18 +260,18 @@
                                 <p class="text-xs text-slate-400">${(tienda.productos || []).length} productos disponibles</p>
                             </div>
                         </div>
-                        <div class="pt-2 flex items-center justify-between text-xs font-semibold" style="color: ${colorAccento}">
+                        <div class="pt-2 flex items-center justify-between text-xs font-semibold text-amber-400">
                             <span>Visitar catálogo</span>
-                            <span>→</span>
+                            <span class="group-hover:translate-x-1 transition-transform">→</span>
                         </div>
                     </div>
                 `;
             });
         }
 
-        async function filtrarTiendas() {
+        function filtrarTiendas() {
             const texto = document.getElementById('input-buscar-tienda').value.toLowerCase();
-            const db = await obtenerBaseDatos();
+            const db = dbCache || {};
             const tiendasFiltradas = {};
 
             Object.keys(db).forEach(slug => {
