@@ -198,9 +198,14 @@
             btn.textContent = "Verificando...";
 
             try {
-                const sesion = await iniciarSesionTienda({ usuario: usuarioInput, password: passInput });
-                localStorage.setItem('sesion_vendedor', sesion.slug);
-                window.location.href = 'admin.html';
+                const db = await obtenerBaseDatos();
+                
+                if (db[usuarioInput] && db[usuarioInput].pass === passInput) {
+                    localStorage.setItem('sesion_vendedor', usuarioInput);
+                    window.location.href = 'admin.html';
+                } else {
+                    throw new Error("Usuario o contraseña incorrectos.");
+                }
             } catch (err) {
                 errorDiv.textContent = err.message || "Usuario o contraseña incorrectos.";
                 errorDiv.classList.remove('hidden');
