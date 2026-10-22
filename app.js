@@ -5,30 +5,34 @@
 const API_BASE_URL = 'https://api-multistore.ledezmayirbin.workers.dev/api';
 
 /**
- * Obtiene la base de datos completa conectándose a Cloudflare D1 mediante el Worker.
- * Si falla la red, utiliza un respaldo local del navegador.
+ * Obtiene la base de datos completa conectándose a Cloudflare D1.
+ * Incluye parámetro anti-caché y sincronización de respaldo local.
  */
 async function obtenerBaseDatos() {
     try {
-        const response = await fetch(`${API_BASE_URL}/obtener-db`);
+        const response = await fetch(`${API_BASE_URL}/obtener-db?_t=${Date.now()}`, {
+            cache: 'no-store'
+        });
+        
         if (!response.ok) throw new Error("Error al conectar con la base de datos en la nube.");
         const data = await response.json();
         
-        // Si la base de datos en la nube está completamente vacía, retorna un objeto vacío
-        if (!data || Object.keys(data).length === 0) {
+        if (!data || typeof data !== 'object') {
             return {};
         }
         
+        // Actualizar siempre el respaldo local con los datos frescos de la nube
+        localStorage.setItem('multi_tiendas_db', JSON.stringify(data));
         return data;
     } catch (err) {
-        console.error("Usando respaldo local por fallo de red:", err);
-        let dbLocal = localStorage.getItem('multi_tiendas_db');
-        if (!dbLocal) {
-            let dbVacia = {};
-            localStorage.setItem('multi_tiendas_db', JSON.stringify(dbVacia));
-            return dbVacia;
+        console.warn("Usando respaldo local por fallo de red:", err);
+        const dbLocal = localStorage.getItem('multi_tiendas_db');
+        if (!dbLocal) return {};
+        try {
+            return JSON.parse(dbLocal) || {};
+        } catch {
+            return {};
         }
-        return JSON.parse(dbLocal);
     }
 }
 
