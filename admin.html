@@ -98,20 +98,13 @@
             </div>
 
             <form id="form-config-tienda" onsubmit="guardarConfiguracionTienda(event)" class="row g-4">
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider">Nombre de la Tienda</label>
                     <input type="text" id="config-nombre" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-2.5">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-5">
                     <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider">WhatsApp de Pedidos</label>
                     <input type="text" id="config-whatsapp" placeholder="584121234567" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-2.5">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider">Color Principal</label>
-                    <div class="d-flex align-items-center gap-3 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2">
-                        <input type="color" id="config-color" value="#f59e0b" class="form-control-color bg-transparent border-0 cursor-pointer" style="width: 40px; height: 35px;">
-                        <span class="text-xs text-slate-300">Acento de botones</span>
-                    </div>
                 </div>
 
                 <div class="col-12">
@@ -253,7 +246,8 @@
 
         async function cargarPanelAdmin() {
             const db = await obtenerBaseDatos();
-            const tienda = db[tiendaSlug];
+            const slugReal = Object.keys(db).find(k => k.trim().toLowerCase() === tiendaSlug.toLowerCase()) || tiendaSlug;
+            const tienda = db[slugReal];
 
             if (!tienda) { 
                 alert("Sesión no encontrada o expirada. Por favor, inicia sesión nuevamente.");
@@ -262,9 +256,9 @@
                 return; 
             }
 
+            tiendaSlug = slugReal;
             document.getElementById('config-nombre').value = tienda.nombreTienda || "";
             document.getElementById('config-whatsapp').value = tienda.whatsapp || "";
-            document.getElementById('config-color').value = tienda.colorPrimario || "#f59e0b";
             base64LogotipoTemp = tienda.logoUrl || "";
 
             document.getElementById('nav-store-name').textContent = tienda.nombreTienda;
@@ -335,12 +329,17 @@
                 
                 db[tiendaSlug].nombreTienda = document.getElementById('config-nombre').value.trim();
                 db[tiendaSlug].whatsapp = document.getElementById('config-whatsapp').value.trim();
-                db[tiendaSlug].colorPrimario = document.getElementById('config-color').value;
                 db[tiendaSlug].logoUrl = base64LogotipoTemp;
 
-                await guardarBaseDatos(db);
-                mostrarAlertaSync("¡Configuración guardada exitosamente!");
-                await cargarPanelAdmin();
+                const exito = await guardarBaseDatos(db);
+                if (exito) {
+                    mostrarAlertaSync("¡Configuración guardada exitosamente!");
+                    await cargarPanelAdmin();
+                } else {
+                    alert("No se pudo sincronizar con la nube de Cloudflare. Verifica tu conexión.");
+                }
+            } catch (err) {
+                alert("Error al guardar: " + err.message);
             } finally {
                 btn.disabled = false;
                 btn.textContent = "Guardar Cambios de Tienda";
@@ -386,6 +385,8 @@
             const tienda = db[tiendaSlug];
             const box = document.getElementById('prod-img-preview-box');
 
+            document.getElementById('prod-file-input').value = "";
+
             if (index > -1 && tienda && tienda.productos && tienda.productos[index]) {
                 const prod = tienda.productos[index];
                 document.getElementById('modal-titulo').textContent = "Editar Producto";
@@ -404,6 +405,7 @@
                 document.getElementById('modal-titulo').textContent = "Agregar Nuevo Producto";
                 document.getElementById('form-producto').reset();
                 document.getElementById('prod-index').value = -1;
+                document.getElementById('prod-imagen-base64').value = "";
                 base64ProductoTemp = "";
                 box.classList.add('hidden');
             }
@@ -418,6 +420,9 @@
 
             try {
                 const db = await obtenerBaseDatos();
+                if (!db[tiendaSlug]) db[tiendaSlug] = {};
+                if (!db[tiendaSlug].productos) db[tiendaSlug].productos = [];
+
                 const index = parseInt(document.getElementById('prod-index').value);
                 const imagenFinal = document.getElementById('prod-imagen-base64').value || base64ProductoTemp;
 
@@ -427,6 +432,7 @@
                 }
 
                 const nuevoProd = {
+                    id: (index > -1 && db[tiendaSlug].productos[index]) ? db[tiendaSlug].productos[index].id : undefined,
                     nombre: document.getElementById('prod-nombre').value.trim(),
                     precio: parseFloat(document.getElementById('prod-precio').value),
                     tallas: document.getElementById('prod-tallas').value.trim(),
@@ -435,18 +441,22 @@
                     descripcion: document.getElementById('prod-descripcion').value.trim()
                 };
 
-                if (!db[tiendaSlug].productos) db[tiendaSlug].productos = [];
-
                 if (index > -1) {
                     db[tiendaSlug].productos[index] = nuevoProd;
                 } else {
                     db[tiendaSlug].productos.push(nuevoProd);
                 }
 
-                await guardarBaseDatos(db);
-                modalBootstrap.hide();
-                mostrarAlertaSync("¡Producto guardado correctamente!");
-                await renderizarTablaProductos();
+                const guardado = await guardarBaseDatos(db);
+                if (guardado) {
+                    modalBootstrap.hide();
+                    mostrarAlertaSync("¡Producto guardado correctamente!");
+                    await renderizarTablaProductos();
+                } else {
+                    alert("Error al sincronizar con Cloudflare D1.");
+                }
+            } catch (err) {
+                alert("Error al guardar producto: " + err.message);
             } finally {
                 btn.disabled = false;
                 btn.textContent = "Guardar Producto";
@@ -456,10 +466,16 @@
         async function eliminarProducto(index) {
             if (confirm("¿Estás seguro de eliminar este producto?")) {
                 const db = await obtenerBaseDatos();
-                db[tiendaSlug].productos.splice(index, 1);
-                await guardarBaseDatos(db);
-                mostrarAlertaSync("Producto eliminado.");
-                await renderizarTablaProductos();
+                if (db[tiendaSlug] && db[tiendaSlug].productos) {
+                    db[tiendaSlug].productos.splice(index, 1);
+                    const guardado = await guardarBaseDatos(db);
+                    if (guardado) {
+                        mostrarAlertaSync("Producto eliminado.");
+                        await renderizarTablaProductos();
+                    } else {
+                        alert("Error al eliminar en la nube.");
+                    }
+                }
             }
         }
 
