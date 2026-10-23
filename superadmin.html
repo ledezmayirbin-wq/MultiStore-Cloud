@@ -23,70 +23,69 @@
 <body class="bg-darkbg text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-white">
 
     <header class="w-full border-b border-slate-800 backdrop-blur-md bg-darkbg/80 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center shadow-lg border border-slate-700">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+                <div class="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center shadow-lg border border-slate-700">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                 </div>
                 <div>
-                    <span class="text-lg font-bold tracking-tight text-white block">Panel SuperAdmin</span>
-                    <span class="text-xs text-rose-400 font-semibold">Control Maestro Cloudflare D1</span>
+                    <span class="text-sm sm:text-lg font-bold tracking-tight text-white block">SuperAdmin</span>
+                    <span class="text-[10px] sm:text-xs text-rose-400 font-semibold">Control Maestro D1</span>
                 </div>
             </div>
-            <div class="flex items-center space-x-4">
-                <button onclick="cerrarSesionSuperAdmin()" class="btn btn-danger btn-sm rounded-xl px-3 py-2 text-xs font-semibold">
-                    Cerrar Sesión Maestro
+            <div class="flex items-center space-x-2">
+                <button onclick="cerrarSesionSuperAdmin()" class="btn btn-danger btn-sm rounded-xl px-2.5 py-1.5 sm:px-3 sm:py-2 text-[11px] sm:text-xs font-semibold">
+                    Cerrar Sesión
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 py-10 flex-grow w-full space-y-10">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex-grow w-full space-y-6 sm:space-y-10">
         
         <div id="sync-alert" class="alert alert-success d-none rounded-2xl py-3 text-xs fw-semibold shadow-sm" role="alert">
             <span id="sync-message">Acción ejecutada correctamente.</span>
         </div>
 
         <!-- TARJETAS DE MÉTRICAS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-cardbg border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between space-y-2">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Tiendas</span>
-                <span id="stat-total-tiendas" class="text-3xl font-black text-white">0</span>
-                <span class="text-[11px] text-slate-500">Registradas en la plataforma</span>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <div class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl flex flex-col justify-between space-y-2">
+                <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Tiendas</span>
+                <span id="stat-total-tiendas" class="text-2xl sm:text-3xl font-black text-white">0</span>
+                <span class="text-[10px] text-slate-500">Registradas</span>
             </div>
-            <div class="bg-cardbg border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between space-y-2">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tiendas Activas</span>
-                <span id="stat-tiendas-activas" class="text-3xl font-black text-emerald-400">0</span>
-                <span class="text-[11px] text-slate-500">Operando con normalidad</span>
+            <div class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl flex flex-col justify-between space-y-2">
+                <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Activas</span>
+                <span id="stat-tiendas-activas" class="text-2xl sm:text-3xl font-black text-emerald-400">0</span>
+                <span class="text-[10px] text-slate-500">Operando</span>
             </div>
-            <div class="bg-cardbg border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between space-y-2">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tiendas Bloqueadas</span>
-                <span id="stat-tiendas-bloqueadas" class="text-3xl font-black text-rose-400">0</span>
-                <span class="text-[11px] text-slate-500">Suspendidas por falta de pago</span>
+            <div class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl flex flex-col justify-between space-y-2">
+                <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Bloqueadas</span>
+                <span id="stat-tiendas-bloqueadas" class="text-2xl sm:text-3xl font-black text-rose-400">0</span>
+                <span class="text-[10px] text-slate-500">Suspendidas</span>
             </div>
-            <div class="bg-cardbg border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between space-y-2">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Productos Globales</span>
-                <span id="stat-productos-totales" class="text-3xl font-black text-amber-400">0</span>
-                <span class="text-[11px] text-slate-500">Inventario total en red</span>
+            <div class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl flex flex-col justify-between space-y-2">
+                <span class="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Productos</span>
+                <span id="stat-productos-totales" class="text-2xl sm:text-3xl font-black text-amber-400">0</span>
+                <span class="text-[10px] text-slate-500">Inventario red</span>
             </div>
         </div>
 
         <!-- TABLA DE GESTIÓN DE TIENDAS -->
-        <section class="bg-cardbg border border-slate-800 rounded-3xl p-8 shadow-xl space-y-6">
+        <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
             <div class="border-bottom border-slate-800 pb-4">
-                <h2 class="text-xl font-black text-white m-0">Gestión Global de Tiendas y Suscripciones</h2>
-                <p class="text-sm text-slate-400 m-0 mt-0.5">Controla el estado, vigencia y accesos de todos los comercios asociados.</p>
+                <h2 class="text-lg sm:text-xl font-black text-white m-0">Gestión de Tiendas</h2>
+                <p class="text-xs sm:text-sm text-slate-400 m-0 mt-0.5">Controla el estado y vigencia de los comercios.</p>
             </div>
             <div class="table-responsive">
-                <table class="table table-dark table-hover align-middle mb-0 bg-transparent">
-                    <thead class="text-secondary uppercase text-xs">
+                <table class="table table-dark table-hover align-middle mb-0 bg-transparent text-xs sm:text-sm">
+                    <thead class="text-secondary uppercase text-[10px] sm:text-xs">
                         <tr>
-                            <th class="py-3 px-4">Comercio / Identificador</th>
-                            <th class="py-3 px-4">WhatsApp</th>
-                            <th class="py-3 px-4">Productos</th>
-                            <th class="py-3 px-4">Días Solventes</th>
-                            <th class="py-3 px-4">Estado</th>
-                            <th class="py-3 px-4 text-end">Acciones de Control</th>
+                            <th class="py-3 px-3">Comercio</th>
+                            <th class="py-3 px-3 hidden sm:table-cell">WhatsApp</th>
+                            <th class="py-3 px-3">Días</th>
+                            <th class="py-3 px-3">Estado</th>
+                            <th class="py-3 px-3 text-end">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="tabla-superadmin-tiendas" class="border-top-0"></tbody>
@@ -95,20 +94,20 @@
         </section>
 
         <!-- SECCIÓN: HISTORIAL CONTABLE DE PAGOS -->
-        <section class="bg-cardbg border border-slate-800 rounded-3xl p-8 shadow-xl space-y-6">
+        <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
             <div class="border-bottom border-slate-800 pb-4">
-                <h2 class="text-xl font-black text-white m-0">Historial Contable de Pagos y Renovaciones</h2>
-                <p class="text-sm text-slate-400 m-0 mt-0.5">Registro detallado de ingresos por suscripciones de tiendas.</p>
+                <h2 class="text-lg sm:text-xl font-black text-white m-0">Historial Contable</h2>
+                <p class="text-xs sm:text-sm text-slate-400 m-0 mt-0.5">Registro detallado de ingresos por suscripciones.</p>
             </div>
             <div class="table-responsive">
-                <table class="table table-dark table-hover align-middle mb-0 bg-transparent">
-                    <thead class="text-secondary uppercase text-xs">
+                <table class="table table-dark table-hover align-middle mb-0 bg-transparent text-xs sm:text-sm">
+                    <thead class="text-secondary uppercase text-[10px] sm:text-xs">
                         <tr>
-                            <th class="py-3 px-4">ID Pago</th>
-                            <th class="py-3 px-4">Tienda (Slug)</th>
-                            <th class="py-3 px-4">Monto ($)</th>
-                            <th class="py-3 px-4">Días Añadidos</th>
-                            <th class="py-3 px-4 text-end">Fecha de Registro</th>
+                            <th class="py-3 px-3">ID</th>
+                            <th class="py-3 px-3">Tienda</th>
+                            <th class="py-3 px-3">Monto</th>
+                            <th class="py-3 px-3">Días</th>
+                            <th class="py-3 px-3 text-end">Fecha</th>
                         </tr>
                     </thead>
                     <tbody id="tabla-historial-pagos" class="border-top-0"></tbody>
@@ -118,7 +117,7 @@
     </main>
 
     <footer class="w-full border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-        Panel SuperAdmin Cloudflare Edge &copy; 2026.
+        Panel SuperAdmin Edge &copy; 2026.
     </footer>
 
     <script src="app.js"></script>
@@ -156,7 +155,7 @@
             const slugs = Object.keys(db || {});
 
             if (slugs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-secondary">No hay tiendas registradas.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-secondary">No hay tiendas registradas.</td></tr>`;
                 return;
             }
 
@@ -172,26 +171,27 @@
                 if (estadoBloqueado) tiendasBloqueadas++; else tiendasActivas++;
 
                 const badgeEstado = estadoBloqueado 
-                    ? `<span class="badge bg-danger text-white px-2.5 py-1 rounded-pill">Suspendida</span>` 
-                    : `<span class="badge bg-success text-white px-2.5 py-1 rounded-pill">Activa</span>`;
+                    ? `<span class="badge bg-danger text-white px-2 py-0.5 rounded-pill text-[10px]">Susp.</span>` 
+                    : `<span class="badge bg-success text-white px-2 py-0.5 rounded-pill text-[10px]">Activa</span>`;
 
                 tbody.innerHTML += `
                     <tr>
-                        <td class="py-3 px-4">
-                            <span class="fw-bold text-white d-block">${tienda.nombreTienda || 'Sin Nombre'}</span>
-                            <small class="text-secondary">Slug: @${slug}</small>
+                        <td class="py-3 px-3">
+                            <span class="fw-bold text-white d-block text-xs sm:text-sm">${tienda.nombreTienda || 'Sin Nombre'}</span>
+                            <small class="text-secondary text-[10px]">@${slug}</small>
                         </td>
-                        <td class="py-3 px-4 text-slate-300">${tienda.whatsapp || 'No registrado'}</td>
-                        <td class="py-3 px-4 fw-bold text-amber-400">${cantProductos} ítems</td>
-                        <td class="py-3 px-4 text-slate-300 font-semibold">${diasRestantes} días</td>
-                        <td class="py-3 px-4">${badgeEstado}</td>
-                        <td class="py-3 px-4 text-end">
-                            <button onclick="cambiarEstadoBloqueo('${slug}', ${!estadoBloqueado})" class="btn ${estadoBloqueado ? 'btn-outline-success' : 'btn-outline-danger'} btn-sm rounded-pill px-3 me-1">
-                                ${estadoBloqueado ? 'Desbloquear' : 'Bloquear'}
-                            </button>
-                            <button onclick="ajustarSuscripcion('${slug}', ${diasRestantes}, ${estadoBloqueado})" class="btn btn-outline-warning btn-sm rounded-pill px-3">
-                                Suscripción
-                            </button>
+                        <td class="py-3 px-3 text-slate-300 text-xs hidden sm:table-cell">${tienda.whatsapp || 'N/D'}</td>
+                        <td class="py-3 px-3 text-slate-300 font-semibold text-xs">${diasRestantes} d</td>
+                        <td class="py-3 px-3">${badgeEstado}</td>
+                        <td class="py-3 px-3 text-end">
+                            <div class="flex items-center justify-end gap-1">
+                                <button onclick="cambiarEstadoBloqueo('${slug}', ${!estadoBloqueado})" class="btn ${estadoBloqueado ? 'btn-outline-success' : 'btn-outline-danger'} btn-sm rounded-pill px-2 py-1 text-[10px]">
+                                    ${estadoBloqueado ? 'Activar' : 'Bloquear'}
+                                </button>
+                                <button onclick="ajustarSuscripcion('${slug}', ${diasRestantes}, ${estadoBloqueado})" class="btn btn-outline-warning btn-sm rounded-pill px-2 py-1 text-[10px]">
+                                    Suscrip.
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 `;
@@ -208,26 +208,26 @@
             tbody.innerHTML = "";
 
             if (!pagos || pagos.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-secondary">No hay pagos registrados aún. Realiza una renovación para ver el historial.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-secondary text-xs">No hay pagos registrados aún.</td></tr>`;
                 return;
             }
 
             pagos.forEach(pago => {
-                const fechaFormateada = new Date(pago.fecha_registro).toLocaleString();
+                const fechaFormateada = new Date(pago.fecha_registro).toLocaleDateString();
                 tbody.innerHTML += `
                     <tr>
-                        <td class="py-3 px-4 text-slate-400">#${pago.id}</td>
-                        <td class="py-3 px-4 fw-bold text-white">@${pago.tienda_slug}</td>
-                        <td class="py-3 px-4 text-emerald-400 fw-bold">$${parseFloat(pago.monto).toFixed(2)}</td>
-                        <td class="py-3 px-4 text-amber-400 font-semibold">+${pago.dias_agregados} días</td>
-                        <td class="py-3 px-4 text-end text-slate-400 text-xs">${fechaFormateada}</td>
+                        <td class="py-3 px-3 text-slate-400 text-xs">#${pago.id}</td>
+                        <td class="py-3 px-3 fw-bold text-white text-xs">@${pago.tienda_slug}</td>
+                        <td class="py-3 px-3 text-emerald-400 fw-bold text-xs">$${parseFloat(pago.monto).toFixed(2)}</td>
+                        <td class="py-3 px-3 text-amber-400 font-semibold text-xs">+${pago.dias_agregados}d</td>
+                        <td class="py-3 px-3 text-end text-slate-400 text-[10px]">${fechaFormateada}</td>
                     </tr>
                 `;
             });
         }
 
         async function cambiarEstadoBloqueo(slug, bloquear) {
-            const accionTexto = bloquear ? "bloquear el acceso a esta tienda" : "desbloquear y restaurar el acceso";
+            const accionTexto = bloquear ? "bloquear esta tienda" : "desbloquear esta tienda";
             if (confirm(`¿Estás seguro de ${accionTexto}?`)) {
                 try {
                     const db = window.dbCacheSuperAdmin || {};
@@ -240,10 +240,10 @@
                     });
 
                     if (res.ok) {
-                        mostrarAlertaSync(bloquear ? "Tienda bloqueada correctamente." : "Tienda desbloqueada con éxito.");
+                        mostrarAlertaSync(bloquear ? "Tienda bloqueada." : "Tienda desbloqueada.");
                         await cargarPanelSuperAdmin();
                     } else {
-                        alert("Error al actualizar en el servidor.");
+                        alert("Error al actualizar.");
                     }
                 } catch (err) {
                     alert("Error de red: " + err.message);
@@ -254,7 +254,7 @@
         async function ajustarSuscripcion(slug, diasActuales, estadoBloqueado) {
             const nuevosDias = prompt("Ingresa la cantidad de nuevos días solventes:", diasActuales);
             if (nuevosDias !== null && !isNaN(nuevosDias)) {
-                const montoPago = prompt("Ingresa el monto cobrado por esta renovación ($):", "10.00");
+                const montoPago = prompt("Ingresa el monto cobrado ($):", "10.00");
                 if (montoPago !== null && !isNaN(montoPago)) {
                     try {
                         const diasInt = parseInt(nuevosDias);
@@ -273,10 +273,10 @@
                         });
 
                         if (res.ok) {
-                            mostrarAlertaSync("Suscripción renovada y pago registrado con éxito.");
+                            mostrarAlertaSync("Suscripción renovada con éxito.");
                             await cargarPanelSuperAdmin();
                         } else {
-                            alert("Error al guardar en la base de datos.");
+                            alert("Error al guardar.");
                         }
                     } catch (err) {
                         alert("Error de red: " + err.message);
