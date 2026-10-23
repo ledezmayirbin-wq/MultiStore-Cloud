@@ -86,6 +86,41 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex-grow w-full space-y-6 sm:space-y-10">
         
+        <!-- PANTALLA DE BLOQUEO / SUSCRIPCIÓN VENCIDA (Oculta por defecto) -->
+        <section id="pantalla-suscripcion-vencida" class="hidden max-w-xl mx-auto my-12 bg-cardbg border border-rose-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
+            <div class="w-16 h-16 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/20 shadow-inner">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            
+            <div class="space-y-2">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                    Suscripción Inactiva
+                </span>
+                <h2 class="text-2xl font-black text-white">Tu tienda está suspendida</h2>
+                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                    El periodo de vigencia de tu plataforma ha expirado. Para reactivar tu acceso y el de tus clientes de forma inmediata, realiza el pago de la renovación.
+                </p>
+            </div>
+
+            <!-- DATOS DE PAGO / MÉTODOS -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 text-left space-y-3">
+                <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">Métodos de Pago Disponibles</h4>
+                <div class="text-xs text-slate-300 space-y-1.5">
+                    <p><strong>🏦 Pago Móvil / Transferencia:</strong> Bco. Mercantil | 0412-1234567 | V-12.345.678</p>
+                    <p><strong>💎 Binance Pay (USDT):</strong> pagos@multistorecloud.com</p>
+                    <p><strong>💵 Monto de Renovación:</strong> <span class="text-emerald-400 font-bold">$10.00 USD</span></p>
+                </div>
+            </div>
+
+            <!-- BOTÓN DE REPORTE POR WHATSAPP -->
+            <div class="pt-2">
+                <a id="link-renovar-whatsapp" href="#" target="_blank" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-xs sm:text-sm">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                    Reportar Pago y Renovar por WhatsApp
+                </a>
+            </div>
+        </section>
+
         <div id="alerta-suscripcion-banner" class="hidden rounded-2xl p-4 shadow-lg border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center space-x-3">
                 <svg class="w-6 h-6 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -100,75 +135,78 @@
             <span id="sync-message">Cambios sincronizados correctamente.</span>
         </div>
 
-        <!-- SECCIÓN 1: Configuración de la Tienda -->
-        <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
-            <div class="border-b border-slate-800 pb-4">
-                <h2 class="text-lg sm:text-xl font-black text-white">Configuración General</h2>
-                <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Personaliza la identidad visual y marca de tu negocio.</p>
-            </div>
-
-            <form id="form-config-tienda" onsubmit="guardarConfiguracionTienda(event)" class="row g-4">
-                <div class="col-md-7">
-                    <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider">Nombre de la Tienda</label>
-                    <input type="text" id="config-nombre" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-2.5 text-sm">
-                </div>
-                <div class="col-md-5">
-                    <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider">WhatsApp de Pedidos</label>
-                    <input type="text" id="config-whatsapp" placeholder="584121234567" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-2.5 text-sm">
+        <!-- CONTENEDOR DE TRABAJO (Se oculta si la tienda está bloqueada) -->
+        <div id="contenedor-panel-activo" class="space-y-6 sm:space-y-10">
+            <!-- SECCIÓN 1: Configuración de la Tienda -->
+            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <h2 class="text-lg sm:text-xl font-black text-white">Configuración General</h2>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Personaliza la identidad visual y marca de tu negocio.</p>
                 </div>
 
-                <div class="col-12">
-                    <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Logotipo de la Tienda</label>
-                    <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-amber-500 rounded-2xl p-4 sm:p-6 text-center bg-slate-900/50 transition cursor-pointer flex flex-col items-center justify-center space-y-3 relative overflow-hidden">
-                        <input type="file" id="file-logo-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
-                        <div id="drop-zone-content" class="flex flex-col items-center space-y-2 pointer-events-none">
-                            <svg class="w-8 h-8 sm:w-10 sm:h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <span class="text-xs sm:text-sm text-slate-300 font-medium">Arrastra o <span class="text-amber-400 underline">examina</span> tu logotipo</span>
-                        </div>
-                        <div id="logo-preview-container" class="hidden flex items-center space-x-4">
-                            <img id="logo-preview-img" class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover border border-slate-700 shadow-md">
-                            <div class="text-start">
-                                <span class="text-xs text-emerald-400 font-semibold block">Logotipo cargado</span>
-                                <span class="text-[11px] text-slate-400">Toca para cambiarlo</span>
+                <form id="form-config-tienda" onsubmit="guardarConfiguracionTienda(event)" class="row g-4">
+                    <div class="col-md-7">
+                        <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider">Nombre de la Tienda</label>
+                        <input type="text" id="config-nombre" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-2.5 text-sm">
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider">WhatsApp de Pedidos</label>
+                        <input type="text" id="config-whatsapp" placeholder="584121234567" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-2.5 text-sm">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Logotipo de la Tienda</label>
+                        <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-amber-500 rounded-2xl p-4 sm:p-6 text-center bg-slate-900/50 transition cursor-pointer flex flex-col items-center justify-center space-y-3 relative overflow-hidden">
+                            <input type="file" id="file-logo-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                            <div id="drop-zone-content" class="flex flex-col items-center space-y-2 pointer-events-none">
+                                <svg class="w-8 h-8 sm:w-10 sm:h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <span class="text-xs sm:text-sm text-slate-300 font-medium">Arrastra o <span class="text-amber-400 underline">examina</span> tu logotipo</span>
+                            </div>
+                            <div id="logo-preview-container" class="hidden flex items-center space-x-4">
+                                <img id="logo-preview-img" class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover border border-slate-700 shadow-md">
+                                <div class="text-start">
+                                    <span class="text-xs text-emerald-400 font-semibold block">Logotipo cargado</span>
+                                    <span class="text-[11px] text-slate-400">Toca para cambiarlo</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-12 text-end pt-2">
-                    <button type="submit" id="btn-guardar-tienda" class="btn btn-warning fw-bold w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg">
-                        Guardar Cambios
+                    <div class="col-12 text-end pt-2">
+                        <button type="submit" id="btn-guardar-tienda" class="btn btn-warning fw-bold w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- SECCIÓN 2: Gestión de Productos -->
+            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
+                <div class="d-flex flex-column sm:flex-row justify-content-between align-items-sm-center gap-3 border-bottom border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-black text-white m-0">Catálogo de Productos</h2>
+                        <p class="text-xs sm:text-sm text-slate-400 m-0 mt-0.5">Agrega o edita las prendas de tu inventario.</p>
+                    </div>
+                    <button onclick="abrirModalProducto()" class="btn btn-warning fw-bold text-dark px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg">
+                        + Nuevo Producto
                     </button>
                 </div>
-            </form>
-        </section>
 
-        <!-- SECCIÓN 2: Gestión de Productos -->
-        <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
-            <div class="d-flex flex-column sm:flex-row justify-content-between align-items-sm-center gap-3 border-bottom border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-lg sm:text-xl font-black text-white m-0">Catálogo de Productos</h2>
-                    <p class="text-xs sm:text-sm text-slate-400 m-0 mt-0.5">Agrega o edita las prendas de tu inventario.</p>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0 bg-transparent text-xs sm:text-sm">
+                        <thead class="text-secondary uppercase text-[10px] sm:text-xs">
+                            <tr>
+                                <th class="py-3 px-3">Producto</th>
+                                <th class="py-3 px-3">Precio</th>
+                                <th class="py-3 px-3 hidden sm:table-cell">Detalles</th>
+                                <th class="py-3 px-3 text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-productos-admin" class="border-top-0"></tbody>
+                    </table>
                 </div>
-                <button onclick="abrirModalProducto()" class="btn btn-warning fw-bold text-dark px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg">
-                    + Nuevo Producto
-                </button>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table table-dark table-hover align-middle mb-0 bg-transparent text-xs sm:text-sm">
-                    <thead class="text-secondary uppercase text-[10px] sm:text-xs">
-                        <tr>
-                            <th class="py-3 px-3">Producto</th>
-                            <th class="py-3 px-3">Precio</th>
-                            <th class="py-3 px-3 hidden sm:table-cell">Detalles</th>
-                            <th class="py-3 px-3 text-end">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-productos-admin" class="border-top-0"></tbody>
-                </table>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 
     <!-- MODAL PRODUCTO -->
@@ -277,26 +315,40 @@
                 mostrarVistaPreviaLogo(base64LogotipoTemp);
             }
 
-            // GESTIÓN DE ALERTA VISUAL DE SUSCRIPCIÓN
             const diasRestantes = tienda.diasSolventes !== undefined ? tienda.diasSolventes : 30;
             const banner = document.getElementById('alerta-suscripcion-banner');
             const tituloBanner = document.getElementById('alerta-sus-titulo');
             const textoBanner = document.getElementById('alerta-sus-texto');
+            const panelActivo = document.getElementById('contenedor-panel-activo');
+            const pantallaBloqueo = document.getElementById('pantalla-suscripcion-vencida');
 
             if (tienda.bloqueado) {
-                banner.className = "rounded-2xl p-4 shadow-lg border bg-rose-500/10 border-rose-500/30 flex items-center justify-between";
-                tituloBanner.textContent = "¡Tienda Suspendida por Falta de Pago!";
-                textoBanner.textContent = "Tu acceso está limitado. Comunícate con soporte para renovar.";
-                banner.classList.remove('hidden');
-            } else if (diasRestantes <= 5) {
-                banner.className = "rounded-2xl p-4 shadow-lg border bg-amber-500/10 border-amber-500/30 flex items-center justify-between";
-                tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de suscripción`;
-                textoBanner.textContent = "Realiza tu pago a tiempo para evitar la suspensión temporal.";
-                banner.classList.remove('hidden');
+                panelActivo.classList.add('hidden');
+                pantallaBloqueo.classList.remove('hidden');
+                banner.classList.add('hidden');
+
+                const mensajeWa = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción de $10.00. Adjunto mi comprobante para la reactivación.`);
+                document.getElementById('link-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWa}`;
+                return;
+            } else {
+                panelActivo.classList.remove('hidden');
+                pantallaBloqueo.classList.add('hidden');
             }
 
-            await renderizarTablaProductos();
-        }
+            // Alerta dinámica según los días restantes
+            if (diasRestantes <= 5 && diasRestantes > 0) {
+                banner.className = "rounded-2xl p-4 shadow-lg border bg-amber-500/10 border-amber-500/30 flex items-center justify-between";
+                tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de suscripción`;
+                textoBanner.textContent = "Realiza tu pago a tiempo para evitar la suspensión temporal de tu tienda.";
+                banner.classList.remove('hidden');
+            } else if (diasRestantes > 5) {
+                banner.className = "rounded-2xl p-4 shadow-lg border bg-emerald-500/10 border-emerald-500/30 flex items-center justify-between";
+                tituloBanner.textContent = `Estado de Suscripción: Solvente`;
+                textoBanner.textContent = `Tienes ${diasRestantes} días de acceso continuo en la plataforma.`;
+                banner.classList.remove('hidden');
+            } else {
+                banner.classList.add('hidden');
+            }
 
         function configurarDragAndDropLogo() {
             const fileInput = document.getElementById('file-logo-input');
