@@ -98,7 +98,27 @@
             </div>
         </section>
     </main>
-
+<!-- SECCIÓN: HISTORIAL CONTABLE DE PAGOS -->
+        <section class="bg-cardbg border border-slate-800 rounded-3xl p-8 shadow-xl space-y-6">
+            <div class="border-bottom border-slate-800 pb-4">
+                <h2 class="text-xl font-black text-white m-0">Historial Contable de Pagos y Renovaciones</h2>
+                <p class="text-sm text-slate-400 m-0 mt-0.5">Registro detallado de ingresos por suscripciones de tiendas.</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0 bg-transparent">
+                    <thead class="text-secondary uppercase text-xs">
+                        <tr>
+                            <th class="py-3 px-4">ID Pago</th>
+                            <th class="py-3 px-4">Tienda (Slug)</th>
+                            <th class="py-3 px-4">Monto ($)</th>
+                            <th class="py-3 px-4">Días Añadidos</th>
+                            <th class="py-3 px-4 text-end">Fecha de Registro</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-historial-pagos" class="border-top-0"></tbody>
+                </table>
+            </div>
+        </section>
     <footer class="w-full border-t border-slate-800 py-6 text-center text-xs text-slate-500">
         Panel SuperAdmin Cloudflare Edge &copy; 2026.
     </footer>
@@ -193,6 +213,28 @@ async function cargarPanelSuperAdmin() {
             } catch (err) {
                 console.error("Error al cargar datos del superadmin:", err);
             }
+        }
+        function renderizarHistorialPagos(pagos) {
+            const tbody = document.getElementById('tabla-historial-pagos');
+            tbody.innerHTML = "";
+
+            if (!pagos || pagos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-secondary">No hay pagos registrados aún.</td></tr>`;
+                return;
+            }
+
+            pagos.forEach(pago => {
+                const fechaFormateada = new Date(pago.fecha_registro).toLocaleString();
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="py-3 px-4 text-slate-400">#${pago.id}</td>
+                        <td class="py-3 px-4 fw-bold text-white">@${pago.tienda_slug}</td>
+                        <td class="py-3 px-4 text-emerald-400 fw-bold">$${parseFloat(pago.monto).toFixed(2)}</td>
+                        <td class="py-3 px-4 text-amber-400 font-semibold">+${pago.dias_agregados} días</td>
+                        <td class="py-3 px-4 text-end text-slate-400 text-xs">${fechaFormateada}</td>
+                    </tr>
+                `;
+            });
         }
 
         async function cambiarEstadoBloqueo(slug, bloquear) {
