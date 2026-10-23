@@ -178,12 +178,18 @@
             document.getElementById('stat-productos-totales').textContent = productosGlobales;
         }
 
-        async function cargarPanelSuperAdmin() {
+async function cargarPanelSuperAdmin() {
             try {
                 const response = await fetch(`${API_BASE_URL}/superadmin/obtener-datos`);
-                const db = await response.json();
-                window.dbCacheSuperAdmin = db;
-                renderizarPanel(db);
+                const data = await response.json();
+                
+                // Soportamos ambas estructuras para evitar cualquier fallo
+                const tiendasObj = data.tiendas || data; 
+                const pagosArr = data.historialPagos || [];
+
+                window.dbCacheSuperAdmin = tiendasObj;
+                renderizarPanel(tiendasObj);
+                renderizarHistorialPagos(pagosArr);
             } catch (err) {
                 console.error("Error al cargar datos del superadmin:", err);
             }
