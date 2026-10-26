@@ -86,7 +86,7 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex-grow w-full space-y-6 sm:space-y-10">
         
-        <!-- PANTALLA DE BLOQUEO / SUSCRIPCIÓN VENCIDA (Oculta por defecto) -->
+        <!-- PANTALLA DE BLOQUEO / SUSCRIPCIÓN VENCIDA (Oculta por defecto si está solvente) -->
         <section id="pantalla-suscripcion-vencida" class="hidden max-w-xl mx-auto my-12 bg-cardbg border border-rose-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
             <div class="w-16 h-16 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/20 shadow-inner">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -121,6 +121,7 @@
             </div>
         </section>
 
+        <!-- BANNER DE ALERTA DE DÍAS (Arriba del panel) -->
         <div id="alerta-suscripcion-banner" class="hidden rounded-2xl p-4 shadow-lg border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center space-x-3">
                 <svg class="w-6 h-6 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -137,6 +138,43 @@
 
         <!-- CONTENEDOR DE TRABAJO (Se oculta si la tienda está bloqueada) -->
         <div id="contenedor-panel-activo" class="space-y-6 sm:space-y-10">
+            
+            <!-- NUEVA SECCIÓN: Tarjeta de Estado y Métodos de Pago para el Admin -->
+            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base sm:text-lg font-black text-white">Estado de tu Suscripción</h2>
+                        <p class="text-xs text-slate-400">Consulta tus días vigentes y los datos de pago para futuras renovaciones.</p>
+                    </div>
+                    <span id="badge-dias-panel" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">-- Días Solventes</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2">
+                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🏦 Datos para Pago Móvil / Transferencia</h4>
+                        <div class="text-xs text-slate-300 space-y-1">
+                            <p><strong>Banco:</strong> Mercantil</p>
+                            <p><strong>Teléfono:</strong> 0412-1234567</p>
+                            <p><strong>Cédula / RIF:</strong> V-12.345.678</p>
+                            <p><strong>Monto:</strong> <span class="text-emerald-400 font-bold">$10.00 USD</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2">
+                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">💎 Datos para Binance Pay (USDT)</h4>
+                        <div class="text-xs text-slate-300 space-y-1">
+                            <p><strong>Correo / Binance ID:</strong> pagos@multistorecloud.com</p>
+                            <p><strong>Moneda:</strong> USDT (Red TRC20 / BEP20)</p>
+                            <p><strong>Monto:</strong> <span class="text-emerald-400 font-bold">$10.00 USD</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-1">
+                    <a id="link-panel-renovar-whatsapp" href="#" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-5 rounded-xl transition text-xs shadow-md">
+                        💬 Reportar Pago de Renovación por WhatsApp
+                    </a>
+                </div>
+            </section>
+
             <!-- SECCIÓN 1: Configuración de la Tienda -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
                 <div class="border-b border-slate-800 pb-4">
@@ -321,6 +359,14 @@
             const textoBanner = document.getElementById('alerta-sus-texto');
             const panelActivo = document.getElementById('contenedor-panel-activo');
             const pantallaBloqueo = document.getElementById('pantalla-suscripcion-vencida');
+            const badgeDias = document.getElementById('badge-dias-panel');
+
+            // Actualizar insignia de días solventes en la tarjeta del panel
+            badgeDias.textContent = `${diasRestantes} Días Solventes`;
+
+            // Enlace de WhatsApp para reportar renovación desde el panel activo
+            const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción de $10.00. Adjunto mi comprobante.`);
+            document.getElementById('link-panel-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWaPanel}`;
 
             if (tienda.bloqueado) {
                 panelActivo.classList.add('hidden');
@@ -339,7 +385,7 @@
             if (diasRestantes <= 5 && diasRestantes > 0) {
                 banner.className = "rounded-2xl p-4 shadow-lg border bg-amber-500/10 border-amber-500/30 flex items-center justify-between";
                 tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de suscripción`;
-                textoBanner.textContent = "Realiza tu pago a tiempo para evitar la suspensión temporal de tu tienda.";
+                textoBanner.textContent = "Realiza tu pago a tiempo con los datos de abajo para evitar la suspensión temporal.";
                 banner.classList.remove('hidden');
             } else if (diasRestantes > 5) {
                 banner.className = "rounded-2xl p-4 shadow-lg border bg-emerald-500/10 border-emerald-500/30 flex items-center justify-between";
@@ -349,6 +395,9 @@
             } else {
                 banner.classList.add('hidden');
             }
+
+            await renderizarTablaProductos();
+        }
 
         function configurarDragAndDropLogo() {
             const fileInput = document.getElementById('file-logo-input');
