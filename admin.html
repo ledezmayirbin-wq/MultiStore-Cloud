@@ -98,7 +98,7 @@
                 </span>
                 <h2 class="text-2xl font-black text-white">Tu tienda está suspendida</h2>
                 <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    El periodo de vigencia de tu plataforma ha expirado. Para reactivar tu acceso y el de tus clientes de forma inmediata, realiza el pago de la renovación.
+                    El periodo de vigencia de tu plataforma ha expirado. Para reactivar tu acceso y el de tus clientes de forma inmediata, realiza el pago de tu renovación mensual por solo $5.00.
                 </p>
             </div>
 
@@ -107,7 +107,7 @@
                 <div class="text-xs text-slate-300 space-y-1.5">
                     <p><strong>🏦 Pago Móvil / Transferencia:</strong> Bco. Mercantil | 0412-1234567 | V-12.345.678</p>
                     <p><strong>💎 Binance Pay (USDT):</strong> pagos@multistorecloud.com</p>
-                    <p><strong>💵 Monto de Renovación:</strong> <span class="text-emerald-400 font-bold">$10.00 USD</span></p>
+                    <p><strong>💵 Monto de Renovación:</strong> <span class="text-emerald-400 font-bold">$5.00 USD</span></p>
                 </div>
             </div>
 
@@ -162,35 +162,66 @@
                 </div>
             </section>
 
-            <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO -->
+            <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO CON VISOR QR INTERACTIVO -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
                 <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
                     <div>
-                        <h2 class="text-base sm:text-lg font-black text-white">Estado de tu Suscripción</h2>
-                        <p class="text-xs text-slate-400">Consulta tus días vigentes y los datos de pago para futuras renovaciones.</p>
+                        <h2 class="text-base sm:text-lg font-black text-white">Métodos de Pago y Códigos QR</h2>
+                        <p class="text-xs text-slate-400">Consulta los datos o despliega los códigos QR oficiales para tus renovaciones de $5.00.</p>
                     </div>
                     <span id="badge-dias-panel" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">-- Días Solventes</span>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2">
-                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🏦 Pago Móvil / Transferencia</h4>
-                        <div class="text-xs text-slate-300 space-y-1">
-                            <p><strong>Banco:</strong> Mercantil | 0412-1234567 | V-12.345.678</p>
-                            <p><strong>Monto:</strong> <span class="text-emerald-400 font-bold">$10.00 USD</span></p>
+                <!-- PESTAÑAS O BOTONES DE SELECCIÓN -->
+                <div class="flex flex-wrap gap-2 pt-2">
+                    <button onclick="cambiarVisorPago('mercantil')" id="btn-tab-mercantil" class="flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md">
+                         Pago Móvil Mercantil (QR)
+                    </button>
+                    <button onclick="cambiarVisorPago('binance')" id="btn-tab-binance" class="flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800">
+                         Binance Pay (QR)
+                    </button>
+                </div>
+
+                <!-- CONTENEDOR VISOR: MERCANTIL -->
+                <div id="visor-mercantil" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 text-center">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="text-left space-y-2 w-full">
+                            <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🏦 Datos de Pago Móvil Mercantil</h4>
+                            <div class="text-xs text-slate-300 space-y-1.5 font-mono">
+                                <p><strong>Banco:</strong> 0105 - Mercantil</p>
+                                <p><strong>Teléfono:</strong> 0412-1234567</p>
+                                <p><strong>Cédula / RIF:</strong> V-12.345.678</p>
+                                <p><strong>Monto:</strong> <span class="text-emerald-400 font-bold">$5.00 USD (al cambio BCV)</span></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2">
-                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">💎 Binance Pay (USDT)</h4>
-                        <div class="text-xs text-slate-300 space-y-1">
-                            <p><strong>Correo:</strong> pagos@multistorecloud.com</p>
-                            <p><strong>Monto:</strong> <span class="text-emerald-400 font-bold">$10.00 USD</span></p>
+                        <!-- Contenedor del QR de Mercantil -->
+                        <div class="shrink-0 bg-white p-2 rounded-2xl shadow-inner border border-slate-700">
+                            <img src="assets/img/qr-mercantil.webp" alt="QR Pago Móvil Mercantil" class="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-xl">
                         </div>
                     </div>
                 </div>
-                <div class="pt-1">
-                    <a id="link-panel-renovar-whatsapp" href="#" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-5 rounded-xl transition text-xs shadow-md">
-                        💬 Reportar Pago de Renovación por WhatsApp
+
+                <!-- CONTENEDOR VISOR: BINANCE (Oculto por defecto) -->
+                <div id="visor-binance" class="hidden bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 text-center">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="text-left space-y-2 w-full">
+                            <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">💎 Datos de Binance Pay (USDT)</h4>
+                            <div class="text-xs text-slate-300 space-y-1.5 font-mono">
+                                <p><strong>Binance ID / Email:</strong> pagos@multistorecloud.com</p>
+                                <p><strong>Red recomendada:</strong> BEP20 / TRC20</p>
+                                <p><strong>Monto exacto:</strong> <span class="text-emerald-400 font-bold">$5.00 USDT</span></p>
+                            </div>
+                        </div>
+                        <!-- Contenedor del QR de Binance -->
+                        <div class="shrink-0 bg-white p-2 rounded-2xl shadow-inner border border-slate-700">
+                            <img src="assets/img/qr-binance.webp" alt="QR Binance Pay" class="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-xl">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <a id="link-panel-renovar-whatsapp" href="#" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-5 rounded-xl transition text-xs shadow-md">
+                         Reportar Pago de Renovación por WhatsApp (Adjuntar Captura)
                     </a>
                 </div>
             </section>
@@ -347,6 +378,26 @@
             await cargarPanelAdmin();
         });
 
+        // Función para alternar el visor de pagos QR en el panel admin
+        function cambiarVisorPago(metodo) {
+            const visorMercantil = document.getElementById('visor-mercantil');
+            const visorBinance = document.getElementById('visor-binance');
+            const btnMercantil = document.getElementById('btn-tab-mercantil');
+            const btnBinance = document.getElementById('btn-tab-binance');
+
+            if (metodo === 'mercantil') {
+                visorMercantil.classList.remove('hidden');
+                visorBinance.classList.add('hidden');
+                btnMercantil.className = "flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md";
+                btnBinance.className = "flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800";
+            } else {
+                visorBinance.classList.remove('hidden');
+                visorMercantil.classList.add('hidden');
+                btnBinance.className = "flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md";
+                btnMercantil.className = "flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800";
+            }
+        }
+
         async function cargarPanelAdmin() {
             try {
                 const db = await obtenerBaseDatos();
@@ -393,7 +444,7 @@
 
                 badgeDias.textContent = `${diasRestantes} Días Solventes`;
 
-                const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción de $10.00. Adjunto mi comprobante.`);
+                const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación mensual de suscripción de $5.00. Adjunto mi comprobante.`);
                 document.getElementById('link-panel-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWaPanel}`;
 
                 if (tienda.bloqueado) {
@@ -401,7 +452,7 @@
                     pantallaBloqueo.classList.remove('hidden');
                     banner.classList.add('hidden');
 
-                    const mensajeWa = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción de $10.00. Adjunto mi comprobante para la reactivación.`);
+                    const mensajeWa = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación mensual de suscripción de $5.00. Adjunto mi comprobante para la reactivación.`);
                     document.getElementById('link-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWa}`;
                     return;
                 } else {
@@ -412,7 +463,7 @@
                 if (diasRestantes <= 5 && diasRestantes > 0) {
                     banner.className = "rounded-2xl p-4 shadow-lg border bg-amber-500/10 border-amber-500/30 flex items-center justify-between";
                     tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de suscripción`;
-                    textoBanner.textContent = "Realiza tu pago a tiempo con los datos de abajo para evitar la suspensión temporal.";
+                    textoBanner.textContent = "Realiza tu pago de $5.00 a tiempo con los datos o QR de abajo para evitar la suspensión temporal.";
                     banner.classList.remove('hidden');
                 } else if (diasRestantes > 5) {
                     banner.className = "rounded-2xl p-4 shadow-lg border bg-emerald-500/10 border-emerald-500/30 flex items-center justify-between";
