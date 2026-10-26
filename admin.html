@@ -98,7 +98,7 @@
                 </span>
                 <h2 class="text-2xl font-black text-white">Tu tienda está suspendida</h2>
                 <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    El periodo de vigencia ha expirado. Elige tu plan ($5 mensual, $18 trimestral o $40 anual) para reactivar tu acceso de forma inmediata.
+                    El periodo de vigencia ha expirado. Elige tu plan ($5 mensual, $14 trimestral o $40 anual) para reactivar tu acceso de forma inmediata.
                 </p>
             </div>
 
@@ -174,11 +174,11 @@
                     <div>
                         <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase">Ahorro Trimestral</span>
                         <h3 class="text-base font-black text-white mt-2">Plan Trimestral</h3>
-                        <div class="text-2xl font-black text-amber-400 mt-1">$18.00 <span class="text-xs text-slate-300 font-normal">/ 3 meses</span></div>
+                        <div class="text-2xl font-black text-amber-400 mt-1">$14.00 <span class="text-xs text-slate-300 font-normal">/ 3 meses</span></div>
                         <p class="text-xs text-slate-300 mt-2 leading-relaxed">Perfecto para proyectar tu comercio por trimestre con un pequeño descuento acumulado.</p>
                     </div>
                     <div class="pt-2 border-t border-slate-800/80 text-[11px] text-amber-400/90">
-                        ⚡ Equivale a $6.00 por mes con comodidad.
+                        ⚡ Equivale a $4.66 por mes con comodidad.
                     </div>
                 </div>
 
@@ -202,7 +202,7 @@
                 <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
                     <div>
                         <h2 class="text-base sm:text-lg font-black text-white">Métodos de Pago y Códigos QR</h2>
-                        <p class="text-xs text-slate-400">Consulta los datos para tu plan elegido ($5, $18 o $40). Haz clic en cualquier QR para ampliarlo.</p>
+                        <p class="text-xs text-slate-400">Consulta los datos para tu plan elegido ($5, $14 o $40). Haz clic en cualquier QR para ampliarlo.</p>
                     </div>
                     <span id="badge-dias-panel" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">-- Días Solventes</span>
                 </div>
@@ -226,7 +226,7 @@
                                 <p><strong>Banco:</strong> 0105 - Mercantil</p>
                                 <p><strong>Teléfono:</strong> 0412-5941381</p>
                                 <p><strong>Cédula / RIF:</strong> V-32.411.077</p>
-                                <p><strong>Montos:</strong> <span class="text-emerald-400 font-bold">$5 (Mensual) | $18 (Trimestral) | $40 (Anual)</span></p>
+                                <p><strong>Montos:</strong> <span class="text-emerald-400 font-bold">$5 (Mensual) | $14 (Trimestral) | $40 (Anual)</span></p>
                             </div>
                             <div>
                                 <button onclick="copiarDatosPagoMovil()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 text-xs font-bold py-2 px-3.5 rounded-xl transition shadow-sm flex items-center gap-1.5">
@@ -250,7 +250,7 @@
                                 <p><strong>Binance ID:</strong> 1262454700</p>
                                 <p><strong>Email:</strong> ledezmayirbin@gmail.com</p>
                                 <p><strong>Red recomendada:</strong> BEP20 / TRC20</p>
-                                <p><strong>Montos exactos:</strong> <span class="text-emerald-400 font-bold">$5.00 | $18.00 | $40.00 USDT</span></p>
+                                <p><strong>Montos exactos:</strong> <span class="text-emerald-400 font-bold">$5.00 | $14.00 | $40.00 USDT</span></p>
                             </div>
                         </div>
                         <div class="shrink-0 bg-white p-2 rounded-2xl shadow-inner border border-slate-700 cursor-pointer group relative" onclick="abrirModalQr('assets/img/qr-binance.webp', 'Binance Pay USDT')">
@@ -367,7 +367,7 @@
                         <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-amber-500 text-dark text-[9px] font-black px-2 py-0.5 rounded-full uppercase">Popular</span>
                         <div>
                             <span class="text-[10px] font-bold text-amber-400 uppercase">Trimestral</span>
-                            <div class="text-xl font-black text-amber-400 mt-1">$18.00</div>
+                            <div class="text-xl font-black text-amber-400 mt-1">$14.00</div>
                             <p class="text-[11px] text-slate-300 mt-1">Proyecta tu comercio por trimestre con ahorro.</p>
                         </div>
                         <span class="text-[10px] text-amber-400/90 pt-2 border-t border-slate-800">Equivale a $6/mes</span>
@@ -533,7 +533,7 @@
         }
 
         function copiarDatosPagoMovil() {
-            const datosTexto = "Banco: 0105 - Mercantil\nTeléfono: 0412-5941381\nCédula/RIF: V-32.411.077\nMontos: $5 (Mensual) | $18 (Trimestral) | $40 (Anual)";
+            const datosTexto = "Banco: 0105 - Mercantil\nTeléfono: 0412-5941381\nCédula/RIF: V-32.411.077\nMontos: $5 (Mensual) | $14 (Trimestral) | $40 (Anual)";
             navigator.clipboard.writeText(datosTexto).then(() => {
                 mostrarAlertaSync("¡Datos de Pago Móvil copiados al portapapeles!");
             }).catch(err => {
@@ -611,7 +611,7 @@
                 if (diasRestantes <= 5 && diasRestantes > 0) {
                     banner.className = "rounded-2xl p-4 shadow-lg border bg-amber-500/10 border-amber-500/30 flex items-center justify-between";
                     tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de prueba / suscripción`;
-                    textoBanner.textContent = "Realiza tu pago mensual ($5), trimestral ($18) o anual ($40) a tiempo para evitar suspensiones.";
+                    textoBanner.textContent = "Realiza tu pago mensual ($5), trimestral ($14) o anual ($40) a tiempo para evitar suspensiones.";
                     banner.classList.remove('hidden');
                 } else if (diasRestantes > 5) {
                     banner.className = "rounded-2xl p-4 shadow-lg border bg-emerald-500/10 border-emerald-500/30 flex items-center justify-between";
