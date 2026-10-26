@@ -86,7 +86,7 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex-grow w-full space-y-6 sm:space-y-10">
         
-        <!-- PANTALLA DE BLOQUEO / SUSCRIPCIÓN VENCIDA (Oculta por defecto si está solvente) -->
+        <!-- PANTALLA DE BLOQUEO / SUSCRIPCIÓN VENCIDA -->
         <section id="pantalla-suscripcion-vencida" class="hidden max-w-xl mx-auto my-12 bg-cardbg border border-rose-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
             <div class="w-16 h-16 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/20 shadow-inner">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -102,7 +102,6 @@
                 </p>
             </div>
 
-            <!-- DATOS DE PAGO / MÉTODOS -->
             <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 text-left space-y-3">
                 <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">Métodos de Pago Disponibles</h4>
                 <div class="text-xs text-slate-300 space-y-1.5">
@@ -112,16 +111,14 @@
                 </div>
             </div>
 
-            <!-- BOTÓN DE REPORTE POR WHATSAPP -->
             <div class="pt-2">
                 <a id="link-renovar-whatsapp" href="#" target="_blank" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-xs sm:text-sm">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                     Reportar Pago y Renovar por WhatsApp
                 </a>
             </div>
         </section>
 
-        <!-- BANNER DE ALERTA DE DÍAS (Arriba del panel) -->
+        <!-- BANNER DE ALERTA DE DÍAS -->
         <div id="alerta-suscripcion-banner" class="hidden rounded-2xl p-4 shadow-lg border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center space-x-3">
                 <svg class="w-6 h-6 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -136,10 +133,10 @@
             <span id="sync-message">Cambios sincronizados correctamente.</span>
         </div>
 
-        <!-- CONTENEDOR DE TRABAJO (Se oculta si la tienda está bloqueada) -->
+        <!-- CONTENEDOR DE TRABAJO -->
         <div id="contenedor-panel-activo" class="space-y-6 sm:space-y-10">
             
-            <!-- TARJETA DE ENLACE DE LA VITRINA (NUEVO) -->
+            <!-- TARJETA DE ENLACE DE LA VITRINA -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
                 <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
                     <div>
@@ -156,18 +153,16 @@
                     
                     <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
                         <button onclick="copiarEnlaceTienda()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-1.5 border border-slate-700 shadow-sm">
-                            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                             Copiar
                         </button>
                         <button onclick="compartirEnlaceTienda()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-1.5 shadow-md">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                             Compartir
                         </button>
                     </div>
                 </div>
             </section>
 
-            <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO PARA EL ADMIN -->
+            <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
                 <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
                     <div>
@@ -179,19 +174,16 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                     <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2">
-                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🏦 Datos para Pago Móvil / Transferencia</h4>
+                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🏦 Pago Móvil / Transferencia</h4>
                         <div class="text-xs text-slate-300 space-y-1">
-                            <p><strong>Banco:</strong> Mercantil</p>
-                            <p><strong>Teléfono:</strong> 0412-1234567</p>
-                            <p><strong>Cédula / RIF:</strong> V-12.345.678</p>
+                            <p><strong>Banco:</strong> Mercantil | 0412-1234567 | V-12.345.678</p>
                             <p><strong>Monto:</strong> <span class="text-emerald-400 font-bold">$10.00 USD</span></p>
                         </div>
                     </div>
                     <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-2">
-                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">💎 Datos para Binance Pay (USDT)</h4>
+                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">💎 Binance Pay (USDT)</h4>
                         <div class="text-xs text-slate-300 space-y-1">
-                            <p><strong>Correo / Binance ID:</strong> pagos@multistorecloud.com</p>
-                            <p><strong>Moneda:</strong> USDT (Red TRC20 / BEP20)</p>
+                            <p><strong>Correo:</strong> pagos@multistorecloud.com</p>
                             <p><strong>Monto:</strong> <span class="text-emerald-400 font-bold">$10.00 USD</span></p>
                         </div>
                     </div>
@@ -203,7 +195,7 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN 1: Configuración de la Tienda -->
+            <!-- CONFIGURACIÓN GENERAL -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
                 <div class="border-b border-slate-800 pb-4">
                     <h2 class="text-lg sm:text-xl font-black text-white">Configuración General</h2>
@@ -225,14 +217,12 @@
                         <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-amber-500 rounded-2xl p-4 sm:p-6 text-center bg-slate-900/50 transition cursor-pointer flex flex-col items-center justify-center space-y-3 relative overflow-hidden">
                             <input type="file" id="file-logo-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
                             <div id="drop-zone-content" class="flex flex-col items-center space-y-2 pointer-events-none">
-                                <svg class="w-8 h-8 sm:w-10 sm:h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                 <span class="text-xs sm:text-sm text-slate-300 font-medium">Arrastra o <span class="text-amber-400 underline">examina</span> tu logotipo</span>
                             </div>
                             <div id="logo-preview-container" class="hidden flex items-center space-x-4">
                                 <img id="logo-preview-img" class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover border border-slate-700 shadow-md">
                                 <div class="text-start">
                                     <span class="text-xs text-emerald-400 font-semibold block">Logotipo cargado</span>
-                                    <span class="text-[11px] text-slate-400">Toca para cambiarlo</span>
                                 </div>
                             </div>
                         </div>
@@ -246,7 +236,7 @@
                 </form>
             </section>
 
-            <!-- SECCIÓN 2: Gestión de Productos -->
+            <!-- GESTIÓN DE PRODUCTOS -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
                 <div class="d-flex flex-column sm:flex-row justify-content-between align-items-sm-center gap-3 border-bottom border-slate-800 pb-4">
                     <div>
@@ -357,92 +347,89 @@
             await cargarPanelAdmin();
         });
 
-async function cargarPanelAdmin() {
-            const db = await obtenerBaseDatos();
-            const slugReal = Object.keys(db).find(k => k.trim().toLowerCase() === tiendaSlug.toLowerCase()) || tiendaSlug;
-            const tienda = db[slugReal];
+        async function cargarPanelAdmin() {
+            try {
+                const db = await obtenerBaseDatos();
+                if (!db || Object.keys(db).length === 0) return;
 
-            if (!tienda) { 
-                alert("Sesión no encontrada o expirada.");
-                localStorage.removeItem('sesion_vendedor');
-                window.location.href = 'login.html'; 
-                return; 
+                const tiendaSlugClean = tiendaSlug.trim().toLowerCase();
+                const slugReal = Object.keys(db).find(k => k.trim().toLowerCase() === tiendaSlugClean);
+                const tienda = slugReal ? db[slugReal] : null;
+
+                if (!tienda) {
+                    alert("Sesión no encontrada o expirada para esta tienda.");
+                    localStorage.removeItem('sesion_vendedor');
+                    window.location.href = 'login.html'; 
+                    return; 
+                }
+
+                tiendaSlug = slugReal;
+
+                // Generar Enlace de Vitrina Limpio y Correcto
+                const pathnameLimpio = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+                const baseUrlActual = window.location.origin + pathnameLimpio;
+                const enlaceVitrinaCompleto = `${baseUrlActual}index.html?tienda=${tiendaSlug}`;
+                const inputEnlace = document.getElementById('input-enlace-tienda');
+                if (inputEnlace) inputEnlace.value = enlaceVitrinaCompleto;
+
+                document.getElementById('config-nombre').value = tienda.nombreTienda || "";
+                document.getElementById('config-whatsapp').value = tienda.whatsapp || "";
+                base64LogotipoTemp = tienda.logoUrl || "";
+
+                document.getElementById('nav-store-name').textContent = tienda.nombreTienda || "Mi Tienda";
+                document.getElementById('link-ver-tienda').href = `index.html?tienda=${tiendaSlug}`;
+
+                if (base64LogotipoTemp) {
+                    mostrarVistaPreviaLogo(base64LogotipoTemp);
+                }
+
+                const diasRestantes = tienda.diasSolventes !== undefined ? tienda.diasSolventes : 30;
+                const banner = document.getElementById('alerta-suscripcion-banner');
+                const tituloBanner = document.getElementById('alerta-sus-titulo');
+                const textoBanner = document.getElementById('alerta-sus-texto');
+                const panelActivo = document.getElementById('contenedor-panel-activo');
+                const pantallaBloqueo = document.getElementById('pantalla-suscripcion-vencida');
+                const badgeDias = document.getElementById('badge-dias-panel');
+
+                badgeDias.textContent = `${diasRestantes} Días Solventes`;
+
+                const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción de $10.00. Adjunto mi comprobante.`);
+                document.getElementById('link-panel-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWaPanel}`;
+
+                if (tienda.bloqueado) {
+                    panelActivo.classList.add('hidden');
+                    pantallaBloqueo.classList.remove('hidden');
+                    banner.classList.add('hidden');
+
+                    const mensajeWa = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción de $10.00. Adjunto mi comprobante para la reactivación.`);
+                    document.getElementById('link-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWa}`;
+                    return;
+                } else {
+                    panelActivo.classList.remove('hidden');
+                    pantallaBloqueo.classList.add('hidden');
+                }
+
+                if (diasRestantes <= 5 && diasRestantes > 0) {
+                    banner.className = "rounded-2xl p-4 shadow-lg border bg-amber-500/10 border-amber-500/30 flex items-center justify-between";
+                    tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de suscripción`;
+                    textoBanner.textContent = "Realiza tu pago a tiempo con los datos de abajo para evitar la suspensión temporal.";
+                    banner.classList.remove('hidden');
+                } else if (diasRestantes > 5) {
+                    banner.className = "rounded-2xl p-4 shadow-lg border bg-emerald-500/10 border-emerald-500/30 flex items-center justify-between";
+                    tituloBanner.textContent = `Estado de Suscripción: Solvente`;
+                    textoBanner.textContent = `Tienes ${diasRestantes} días de acceso continuo en la plataforma.`;
+                    banner.classList.remove('hidden');
+                } else {
+                    banner.classList.add('hidden');
+                }
+
+                await renderizarTablaProductos();
+
+            } catch (err) {
+                console.error("Error crítico al cargar el panel:", err);
             }
-
-            tiendaSlug = slugReal;
-            
-            // ---> PONEMOS EL ENLACE DE VITRINA AQUÍ DIRECTAMENTE <---
-            const pathnameLimpio = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-            const baseUrlActual = window.location.origin + pathnameLimpio;
-            const enlaceVitrinaCompleto = `${baseUrlActual}index.html?tienda=${tiendaSlug}`;
-            const inputEnlace = document.getElementById('input-enlace-tienda');
-            if (inputEnlace) {
-                inputEnlace.value = enlaceVitrinaCompleto;
-            }
-            // --------------------------------------------------------
-
-            document.getElementById('config-nombre').value = tienda.nombreTienda || "";
-            document.getElementById('config-whatsapp').value = tienda.whatsapp || "";
-            base64LogotipoTemp = tienda.logoUrl || "";
-
-            document.getElementById('nav-store-name').textContent = tienda.nombreTienda;
-            document.getElementById('link-ver-tienda').href = `index.html?tienda=${tiendaSlug}`;
-            
-            // El resto de tu código sigue exactamente igual...
-
-          // LÍNEA NUEVA CORREGIDA:
-            const pathnameLimpio = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-            const baseUrlActual = window.location.origin + pathnameLimpio;
-            const enlaceVitrinaCompleto = `${baseUrlActual}index.html?tienda=${tiendaSlug}`;
-
-            if (base64LogotipoTemp) {
-                mostrarVistaPreviaLogo(base64LogotipoTemp);
-            }
-
-            const diasRestantes = tienda.diasSolventes !== undefined ? tienda.diasSolventes : 30;
-            const banner = document.getElementById('alerta-suscripcion-banner');
-            const tituloBanner = document.getElementById('alerta-sus-titulo');
-            const textoBanner = document.getElementById('alerta-sus-texto');
-            const panelActivo = document.getElementById('contenedor-panel-activo');
-            const pantallaBloqueo = document.getElementById('pantalla-suscripcion-vencida');
-            const badgeDias = document.getElementById('badge-dias-panel');
-
-            badgeDias.textContent = `${diasRestantes} Días Solventes`;
-
-            const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción de $10.00. Adjunto mi comprobante.`);
-            document.getElementById('link-panel-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWaPanel}`;
-
-            if (tienda.bloqueado) {
-                panelActivo.classList.add('hidden');
-                pantallaBloqueo.classList.remove('hidden');
-                banner.classList.add('hidden');
-
-                const mensajeWa = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción de $10.00. Adjunto mi comprobante para la reactivación.`);
-                document.getElementById('link-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWa}`;
-                return;
-            } else {
-                panelActivo.classList.remove('hidden');
-                pantallaBloqueo.classList.add('hidden');
-            }
-
-            if (diasRestantes <= 5 && diasRestantes > 0) {
-                banner.className = "rounded-2xl p-4 shadow-lg border bg-amber-500/10 border-amber-500/30 flex items-center justify-between";
-                tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de suscripción`;
-                textoBanner.textContent = "Realiza tu pago a tiempo con los datos de abajo para evitar la suspensión temporal.";
-                banner.classList.remove('hidden');
-            } else if (diasRestantes > 5) {
-                banner.className = "rounded-2xl p-4 shadow-lg border bg-emerald-500/10 border-emerald-500/30 flex items-center justify-between";
-                tituloBanner.textContent = `Estado de Suscripción: Solvente`;
-                textoBanner.textContent = `Tienes ${diasRestantes} días de acceso continuo en la plataforma.`;
-                banner.classList.remove('hidden');
-            } else {
-                banner.classList.add('hidden');
-            }
-
-            await renderizarTablaProductos();
         }
 
-        // FUNCIONES DE COPIAR Y COMPARTIR ENLACE
         function copiarEnlaceTienda() {
             const inputEl = document.getElementById('input-enlace-tienda');
             inputEl.select();
@@ -618,7 +605,7 @@ async function cargarPanelAdmin() {
             modalBootstrap.show();
         }
 
-       async function guardarProductoModal(event) {
+        async function guardarProductoModal(event) {
             event.preventDefault();
             const btn = document.getElementById('btn-guardar-prod');
             btn.disabled = true;
@@ -635,7 +622,6 @@ async function cargarPanelAdmin() {
                     return;
                 }
 
-                // Obtenemos los productos actuales de la tienda desde el caché o la nube
                 const db = await obtenerBaseDatos();
                 if (!db[tiendaSlug]) db[tiendaSlug] = {};
                 if (!db[tiendaSlug].productos) db[tiendaSlug].productos = [];
@@ -652,7 +638,6 @@ async function cargarPanelAdmin() {
                     descripcion: document.getElementById('prod-descripcion').value.trim()
                 };
 
-                // Enviamos el producto directamente a Cloudflare D1 de forma individual
                 const response = await fetch(`${API_BASE_URL}/guardar-producto`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -673,7 +658,7 @@ async function cargarPanelAdmin() {
             }
         }
 
-async function eliminarProducto(index) {
+        async function eliminarProducto(index) {
             if (confirm("¿Estás seguro de eliminar este producto?")) {
                 try {
                     const db = await obtenerBaseDatos();
@@ -686,7 +671,6 @@ async function eliminarProducto(index) {
 
                     const prodAEliminar = tienda.productos[index];
 
-                    // Si el producto tiene un ID en la base de datos D1, lo borramos en la nube con la nueva ruta
                     if (prodAEliminar.id) {
                         const res = await fetch(`${API_BASE_URL}/eliminar-producto`, {
                             method: 'POST',
@@ -698,7 +682,6 @@ async function eliminarProducto(index) {
                         if (!res.ok) throw new Error(resultado.error || "No se pudo eliminar el producto en la nube.");
                     }
 
-                    // Lo quitamos del arreglo local y actualizamos la tabla de inmediato
                     tienda.productos.splice(index, 1);
                     mostrarAlertaSync("Producto eliminado correctamente.");
                     await renderizarTablaProductos();
