@@ -139,7 +139,35 @@
         <!-- CONTENEDOR DE TRABAJO (Se oculta si la tienda está bloqueada) -->
         <div id="contenedor-panel-activo" class="space-y-6 sm:space-y-10">
             
-            <!-- NUEVA SECCIÓN: Tarjeta de Estado y Métodos de Pago para el Admin -->
+            <!-- TARJETA DE ENLACE DE LA VITRINA (NUEVO) -->
+            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base sm:text-lg font-black text-white">Tu Enlace de Vitrina</h2>
+                        <p class="text-xs text-slate-400">Comparte este enlace con tus clientes para que puedan ver tu catálogo y hacerte pedidos.</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Activo en Cloudflare</span>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                    <div class="relative w-full">
+                        <input type="text" id="input-enlace-tienda" readonly class="form-control bg-slate-900 border-slate-800 text-slate-300 rounded-xl py-3 px-4 text-xs sm:text-sm font-mono truncate w-full" value="">
+                    </div>
+                    
+                    <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                        <button onclick="copiarEnlaceTienda()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-1.5 border border-slate-700 shadow-sm">
+                            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            Copiar
+                        </button>
+                        <button onclick="compartirEnlaceTienda()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-1.5 shadow-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                            Compartir
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO PARA EL ADMIN -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
                 <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
                     <div>
@@ -349,6 +377,11 @@
             document.getElementById('nav-store-name').textContent = tienda.nombreTienda;
             document.getElementById('link-ver-tienda').href = `index.html?tienda=${tiendaSlug}`;
 
+            // GENERAR Y MOSTRAR ENLACE DE LA VITRINA EN EL INPUT
+            const baseUrlActual = window.location.origin + window.location.pathname.replace('admin.html', '');
+            const enlaceVitrinaCompleto = `${baseUrlActual}index.html?tienda=${tiendaSlug}`;
+            document.getElementById('input-enlace-tienda').value = enlaceVitrinaCompleto;
+
             if (base64LogotipoTemp) {
                 mostrarVistaPreviaLogo(base64LogotipoTemp);
             }
@@ -361,10 +394,8 @@
             const pantallaBloqueo = document.getElementById('pantalla-suscripcion-vencida');
             const badgeDias = document.getElementById('badge-dias-panel');
 
-            // Actualizar insignia de días solventes en la tarjeta del panel
             badgeDias.textContent = `${diasRestantes} Días Solventes`;
 
-            // Enlace de WhatsApp para reportar renovación desde el panel activo
             const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción de $10.00. Adjunto mi comprobante.`);
             document.getElementById('link-panel-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWaPanel}`;
 
@@ -381,7 +412,6 @@
                 pantallaBloqueo.classList.add('hidden');
             }
 
-            // Alerta dinámica según los días restantes
             if (diasRestantes <= 5 && diasRestantes > 0) {
                 banner.className = "rounded-2xl p-4 shadow-lg border bg-amber-500/10 border-amber-500/30 flex items-center justify-between";
                 tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de suscripción`;
@@ -397,6 +427,39 @@
             }
 
             await renderizarTablaProductos();
+        }
+
+        // FUNCIONES DE COPIAR Y COMPARTIR ENLACE
+        function copiarEnlaceTienda() {
+            const inputEl = document.getElementById('input-enlace-tienda');
+            inputEl.select();
+            inputEl.setSelectionRange(0, 99999);
+
+            navigator.clipboard.writeText(inputEl.value).then(() => {
+                mostrarAlertaSync("¡Enlace copiado al portapapeles!");
+            }).catch(err => {
+                alert("No se pudo copiar el enlace.");
+            });
+        }
+
+        async function compartirEnlaceTienda() {
+            const enlace = document.getElementById('input-enlace-tienda').value;
+            const nombreTienda = document.getElementById('nav-store-name').textContent;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: `Catálogo de ${nombreTienda}`,
+                        text: `¡Visita nuestra tienda digital y haz tus pedidos aquí! 🛍️`,
+                        url: enlace,
+                    });
+                } catch (err) {
+                    console.log("Compartir cancelado o no disponible.");
+                }
+            } else {
+                copiarEnlaceTienda();
+                alert("Tu navegador no soporta el menú de compartir directo, pero hemos copiado el enlace en tu portapapeles.");
+            }
         }
 
         function configurarDragAndDropLogo() {
@@ -542,27 +605,32 @@
             modalBootstrap.show();
         }
 
-        async function guardarProductoModal(event) {
+       async function guardarProductoModal(event) {
             event.preventDefault();
             const btn = document.getElementById('btn-guardar-prod');
             btn.disabled = true;
             btn.textContent = "Guardando...";
 
             try {
-                const db = await obtenerBaseDatos();
-                if (!db[tiendaSlug]) db[tiendaSlug] = {};
-                if (!db[tiendaSlug].productos) db[tiendaSlug].productos = [];
-
                 const index = parseInt(document.getElementById('prod-index').value);
                 const imagenFinal = document.getElementById('prod-imagen-base64').value || base64ProductoTemp;
 
                 if (!imagenFinal) {
                     alert("Por favor, selecciona una imagen para el producto.");
+                    btn.disabled = false;
+                    btn.textContent = "Guardar";
                     return;
                 }
 
+                // Obtenemos los productos actuales de la tienda desde el caché o la nube
+                const db = await obtenerBaseDatos();
+                if (!db[tiendaSlug]) db[tiendaSlug] = {};
+                if (!db[tiendaSlug].productos) db[tiendaSlug].productos = [];
+
+                const productoExistente = (index > -1 && db[tiendaSlug].productos[index]) ? db[tiendaSlug].productos[index] : null;
+
                 const nuevoProd = {
-                    id: (index > -1 && db[tiendaSlug].productos[index]) ? db[tiendaSlug].productos[index].id : undefined,
+                    id: productoExistente ? productoExistente.id : undefined,
                     nombre: document.getElementById('prod-nombre').value.trim(),
                     precio: parseFloat(document.getElementById('prod-precio').value),
                     tallas: document.getElementById('prod-tallas').value.trim(),
@@ -571,20 +639,19 @@
                     descripcion: document.getElementById('prod-descripcion').value.trim()
                 };
 
-                if (index > -1) {
-                    db[tiendaSlug].productos[index] = nuevoProd;
-                } else {
-                    db[tiendaSlug].productos.push(nuevoProd);
-                }
+                // Enviamos el producto directamente a Cloudflare D1 de forma individual
+                const response = await fetch(`${API_BASE_URL}/guardar-producto`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tiendaSlug: tiendaSlug, producto: nuevoProd })
+                });
 
-                const guardado = await guardarBaseDatos(db);
-                if (guardado) {
-                    modalBootstrap.hide();
-                    mostrarAlertaSync("¡Producto guardado correctamente!");
-                    await renderizarTablaProductos();
-                } else {
-                    alert("Error al sincronizar con Cloudflare D1.");
-                }
+                if (!response.ok) throw new Error("Error al guardar el producto en la nube.");
+
+                modalBootstrap.hide();
+                mostrarAlertaSync("¡Producto guardado correctamente!");
+                await renderizarTablaProductos();
+
             } catch (err) {
                 alert("Error al guardar producto: " + err.message);
             } finally {
