@@ -102,15 +102,6 @@
                 </p>
             </div>
 
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 text-left space-y-3">
-                <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">Métodos de Pago Disponibles</h4>
-                <div class="text-xs text-slate-300 space-y-1.5">
-                    <p><strong>🏦 Pago Móvil / Transferencia:</strong> Bco. Mercantil | 0412-1234567 | V-12.345.678</p>
-                    <p><strong>💎 Binance Pay (USDT):</strong> pagos@multistorecloud.com</p>
-                    <p><strong>💵 Monto de Renovación:</strong> <span class="text-emerald-400 font-bold">$5.00 USD</span></p>
-                </div>
-            </div>
-
             <div class="pt-2">
                 <a id="link-renovar-whatsapp" href="#" target="_blank" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-xs sm:text-sm">
                     Reportar Pago y Renovar por WhatsApp
@@ -162,12 +153,12 @@
                 </div>
             </section>
 
-            <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO CON VISOR QR INTERACTIVO -->
+            <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO CON VISOR QR INTERACTIVO Y VISTA GRANDE -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
                 <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
                     <div>
                         <h2 class="text-base sm:text-lg font-black text-white">Métodos de Pago y Códigos QR</h2>
-                        <p class="text-xs text-slate-400">Consulta los datos o despliega los códigos QR oficiales para tus renovaciones de $5.00.</p>
+                        <p class="text-xs text-slate-400">Consulta los datos o haz clic en cualquier QR para abrirlo en tamaño grande.</p>
                     </div>
                     <span id="badge-dias-panel" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">-- Días Solventes</span>
                 </div>
@@ -175,34 +166,41 @@
                 <!-- PESTAÑAS O BOTONES DE SELECCIÓN -->
                 <div class="flex flex-wrap gap-2 pt-2">
                     <button onclick="cambiarVisorPago('mercantil')" id="btn-tab-mercantil" class="flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md">
-                         Pago Móvil Mercantil (QR)
+                        🏦 Pago Móvil Mercantil (QR)
                     </button>
                     <button onclick="cambiarVisorPago('binance')" id="btn-tab-binance" class="flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800">
-                         Binance Pay (QR)
+                        💎 Binance Pay (QR)
                     </button>
                 </div>
 
                 <!-- CONTENEDOR VISOR: MERCANTIL -->
-                <div id="visor-mercantil" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 text-center">
+                <div id="visor-mercantil" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div class="text-left space-y-2 w-full">
+                        <div class="text-left space-y-3 w-full">
                             <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">🏦 Datos de Pago Móvil Mercantil</h4>
-                            <div class="text-xs text-slate-300 space-y-1.5 font-mono">
+                            <div id="datos-pago-movil" class="text-xs text-slate-300 space-y-1.5 font-mono">
                                 <p><strong>Banco:</strong> 0105 - Mercantil</p>
-                                <p><strong>Teléfono:</strong> 0412-1234567</p>
-                                <p><strong>Cédula / RIF:</strong> V-12.345.678</p>
+                                <p><strong>Teléfono:</strong> 0412-5941381</p>
+                                <p><strong>Cédula / RIF:</strong> V-32.411.077</p>
                                 <p><strong>Monto:</strong> <span class="text-emerald-400 font-bold">$5.00 USD (al cambio BCV)</span></p>
                             </div>
+                            <!-- Botón para copiar todos los datos juntos -->
+                            <div>
+                                <button onclick="copiarDatosPagoMovil()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 text-xs font-bold py-2 px-3.5 rounded-xl transition shadow-sm flex items-center gap-1.5">
+                                    📋 Copiar todos los datos de Pago Móvil
+                                </button>
+                            </div>
                         </div>
-                        <!-- Contenedor del QR de Mercantil -->
-                        <div class="shrink-0 bg-white p-2 rounded-2xl shadow-inner border border-slate-700">
-                            <img src="assets/img/qr-mercantil.webp" alt="QR Pago Móvil Mercantil" class="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-xl">
+                        <!-- Contenedor del QR de Mercantil con cursor de zoom -->
+                        <div class="shrink-0 bg-white p-2 rounded-2xl shadow-inner border border-slate-700 cursor-pointer group relative" onclick="abrirModalQr('assets/img/qr-mercantil.webp', 'Pago Móvil Mercantil')">
+                            <img src="assets/img/qr-mercantil.webp" alt="QR Pago Móvil Mercantil" class="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-xl transition group-hover:scale-105">
+                            <span class="absolute bottom-2 right-2 bg-dark/80 text-white text-[9px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">🔍 Ampliar</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- CONTENEDOR VISOR: BINANCE (Oculto por defecto) -->
-                <div id="visor-binance" class="hidden bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 text-center">
+                <div id="visor-binance" class="hidden bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="text-left space-y-2 w-full">
                             <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">💎 Datos de Binance Pay (USDT)</h4>
@@ -212,16 +210,17 @@
                                 <p><strong>Monto exacto:</strong> <span class="text-emerald-400 font-bold">$5.00 USDT</span></p>
                             </div>
                         </div>
-                        <!-- Contenedor del QR de Binance -->
-                        <div class="shrink-0 bg-white p-2 rounded-2xl shadow-inner border border-slate-700">
-                            <img src="assets/img/qr-binance.webp" alt="QR Binance Pay" class="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-xl">
+                        <!-- Contenedor del QR de Binance con cursor de zoom -->
+                        <div class="shrink-0 bg-white p-2 rounded-2xl shadow-inner border border-slate-700 cursor-pointer group relative" onclick="abrirModalQr('assets/img/qr-binance.webp', 'Binance Pay USDT')">
+                            <img src="assets/img/qr-binance.webp" alt="QR Binance Pay" class="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-xl transition group-hover:scale-105">
+                            <span class="absolute bottom-2 right-2 bg-dark/80 text-white text-[9px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">🔍 Ampliar</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="pt-2">
                     <a id="link-panel-renovar-whatsapp" href="#" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-5 rounded-xl transition text-xs shadow-md">
-                         Reportar Pago de Renovación por WhatsApp (Adjuntar Captura)
+                        💬 Reportar Pago de Renovación por WhatsApp (Adjuntar Captura)
                     </a>
                 </div>
             </section>
@@ -296,6 +295,22 @@
         </div>
     </main>
 
+    <!-- MODAL PARA AMPLIAR CÓDIGO QR -->
+    <div class="modal fade" id="modalQrGrande" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content bg-cardbg border border-slate-800 text-white rounded-3xl p-4 shadow-2xl text-center space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <h5 id="modal-qr-titulo" class="text-sm font-bold text-amber-400 m-0">Código QR</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="bg-white p-3 rounded-2xl shadow-inner border border-slate-700 inline-block mx-auto">
+                    <img id="img-qr-modal" src="" alt="Código QR Ampliado" class="w-64 h-64 object-contain rounded-xl">
+                </div>
+                <p class="text-[11px] text-slate-400">Escanea este código desde tu aplicación bancaria o billetera.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL PRODUCTO -->
     <div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -364,6 +379,7 @@
     <script>
         let tiendaSlug = (localStorage.getItem('sesion_vendedor') || "").trim().toLowerCase();
         let modalBootstrap;
+        let modalQrBootstrap;
         let base64LogotipoTemp = "";
         let base64ProductoTemp = "";
 
@@ -373,6 +389,7 @@
                 return;
             }
             modalBootstrap = new bootstrap.Modal(document.getElementById('modalProducto'));
+            modalQrBootstrap = new bootstrap.Modal(document.getElementById('modalQrGrande'));
             configurarDragAndDropLogo();
             configurarInputProductoFoto();
             await cargarPanelAdmin();
@@ -396,6 +413,23 @@
                 btnBinance.className = "flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md";
                 btnMercantil.className = "flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800";
             }
+        }
+
+        // Función para abrir el QR en tamaño grande
+        function abrirModalQr(rutaImg, titulo) {
+            document.getElementById('modal-qr-titulo').textContent = titulo;
+            document.getElementById('img-qr-modal').src = rutaImg;
+            modalQrBootstrap.show();
+        }
+
+        // Función para copiar todos los datos del Pago Móvil de un solo golpe
+        function copiarDatosPagoMovil() {
+            const datosTexto = "Banco: 0105 - Mercantil\nTeléfono: 0412-5941381\nCédula/RIF: V-32.411.077\nMonto: $5.00 USD";
+            navigator.clipboard.writeText(datosTexto).then(() => {
+                mostrarAlertaSync("¡Datos de Pago Móvil copiados al portapapeles!");
+            }).catch(err => {
+                alert("No se pudieron copiar los datos.");
+            });
         }
 
         async function cargarPanelAdmin() {
