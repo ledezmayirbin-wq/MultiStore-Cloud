@@ -6,7 +6,6 @@ const API_BASE_URL = 'https://api-multistore.ledezmayirbin.workers.dev/api';
 
 /**
  * Obtiene la base de datos completa conectándose a Cloudflare D1.
- * Incluye parámetro anti-caché y sincronización de respaldo local.
  */
 async function obtenerBaseDatos() {
     try {
@@ -21,8 +20,6 @@ async function obtenerBaseDatos() {
             return {};
         }
         
-        // Actualizar siempre el respaldo local con los datos frescos de la nube
-        localStorage.setItem('multi_tiendas_db', JSON.stringify(data));
         return data;
     } catch (err) {
         console.warn("Usando respaldo local por fallo de red:", err);
@@ -38,10 +35,16 @@ async function obtenerBaseDatos() {
 
 /**
  * Guarda o actualiza la base de datos completa enviándola al Cloudflare Worker.
+ * (Protegido contra el error de cuota excedida de localStorage por imágenes pesadas)
  */
 async function guardarBaseDatos(nuevaDb) {
     try {
-        localStorage.setItem('multi_tiendas_db', JSON.stringify(nuevaDb)); // Respaldo local
+        // Intentamos guardar en localStorage de forma segura (atrapando el error si las imágenes son muy grandes)
+        try {
+            localStorage.setItem('multi_tiendas_db', JSON.stringify(nuevaDb));
+        } catch (storageErr) {
+            console.warn("Aviso: El localStorage se llenó por el peso de las imágenes, pero la nube Cloudflare D1 recibirá los datos.");
+        }
 
         const response = await fetch(`${API_BASE_URL}/guardar-db`, {
             method: 'POST',
