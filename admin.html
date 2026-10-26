@@ -98,7 +98,7 @@
                 </span>
                 <h2 class="text-2xl font-black text-white">Tu tienda está suspendida</h2>
                 <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    El periodo de vigencia ha expirado. Elige tu plan de renovación ($5 mensual, $18 trimestral o $40 anual) para reactivar tu acceso de forma inmediata.
+                    El periodo de vigencia ha expirado. Elige tu plan ($5 mensual, $18 trimestral o $40 anual) para reactivar tu acceso de forma inmediata.
                 </p>
             </div>
 
@@ -153,7 +153,7 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN DE LOS 3 PLANES (MENSUAL, TRIMESTRAL Y ANUAL) -->
+            <!-- SECCIÓN DE LOS 3 PLANES -->
             <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- 1. Plan Mensual Pro -->
                 <div class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl space-y-3 flex flex-col justify-between">
@@ -168,7 +168,7 @@
                     </div>
                 </div>
 
-                <!-- 2. Plan Trimestral (El del medio / Sugerido) -->
+                <!-- 2. Plan Trimestral -->
                 <div class="bg-cardbg border-2 border-amber-500/40 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl space-y-3 flex flex-col justify-between relative">
                     <span class="absolute top-4 right-4 bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30 uppercase">Popular</span>
                     <div>
@@ -197,7 +197,7 @@
                 </div>
             </section>
 
-            <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO CON VISOR QR INTERACTIVO Y VISTA GRANDE -->
+            <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO CON VISOR QR INTERACTIVO -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
                 <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
                     <div>
@@ -228,14 +228,12 @@
                                 <p><strong>Cédula / RIF:</strong> V-32.411.077</p>
                                 <p><strong>Montos:</strong> <span class="text-emerald-400 font-bold">$5 (Mensual) | $18 (Trimestral) | $40 (Anual)</span></p>
                             </div>
-                            <!-- Botón para copiar todos los datos juntos -->
                             <div>
                                 <button onclick="copiarDatosPagoMovil()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 text-xs font-bold py-2 px-3.5 rounded-xl transition shadow-sm flex items-center gap-1.5">
                                     📋 Copiar todos los datos de Pago Móvil
                                 </button>
                             </div>
                         </div>
-                        <!-- Contenedor del QR de Mercantil con cursor de zoom -->
                         <div class="shrink-0 bg-white p-2 rounded-2xl shadow-inner border border-slate-700 cursor-pointer group relative" onclick="abrirModalQr('assets/img/qr-mercantil.webp', 'Pago Móvil Mercantil')">
                             <img src="assets/img/qr-mercantil.webp" alt="QR Pago Móvil Mercantil" class="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-xl transition group-hover:scale-105">
                             <span class="absolute bottom-2 right-2 bg-dark/80 text-white text-[9px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">🔍 Ampliar</span>
@@ -243,7 +241,7 @@
                     </div>
                 </div>
 
-                <!-- CONTENEDOR VISOR: BINANCE (Oculto por defecto) -->
+                <!-- CONTENEDOR VISOR: BINANCE -->
                 <div id="visor-binance" class="hidden bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4">
                     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
                         <div class="text-left space-y-2 w-full">
@@ -255,7 +253,6 @@
                                 <p><strong>Montos exactos:</strong> <span class="text-emerald-400 font-bold">$5.00 | $18.00 | $40.00 USDT</span></p>
                             </div>
                         </div>
-                        <!-- Contenedor del QR de Binance con cursor de zoom -->
                         <div class="shrink-0 bg-white p-2 rounded-2xl shadow-inner border border-slate-700 cursor-pointer group relative" onclick="abrirModalQr('assets/img/qr-binance.webp', 'Binance Pay USDT')">
                             <img src="assets/img/qr-binance.webp" alt="QR Binance Pay" class="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-xl transition group-hover:scale-105">
                             <span class="absolute bottom-2 right-2 bg-dark/80 text-white text-[9px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">🔍 Ampliar</span>
@@ -339,6 +336,67 @@
             </section>
         </div>
     </main>
+
+    <!-- MODAL DE BIENVENIDA Y SELECCIÓN DE PLANES (NUEVOS ADMINS) -->
+    <div class="modal fade" id="modalBienvenidaAdmin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-cardbg border border-amber-500/30 text-white rounded-3xl p-4 sm:p-6 shadow-2xl space-y-6">
+                
+                <div class="text-center space-y-2 pt-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-widest">
+                        🚀 ¡Bienvenido a MultiStore Cloud!
+                    </span>
+                    <h2 class="text-xl sm:text-2xl font-black text-white">Tu tienda ha sido desplegada en Cloudflare Edge</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
+                        Nos alegra tenerte a bordo. Tienes activados <strong class="text-amber-400">15 días de prueba gratuita</strong> para configurar tu catálogo, probar tu vitrina y recibir pedidos por WhatsApp sin compromisos.
+                    </p>
+                </div>
+
+                <!-- MINI TARJETAS DE PLANES DENTRO DEL MODAL -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-center space-y-2 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Mensual Pro</span>
+                            <div class="text-xl font-black text-white mt-1">$5.00</div>
+                            <p class="text-[11px] text-slate-400 mt-1">Ideal para operar mes a mes con total flexibilidad.</p>
+                        </div>
+                        <span class="text-[10px] text-slate-500 pt-2 border-t border-slate-800">Sin ataduras</span>
+                    </div>
+
+                    <div class="bg-slate-900/80 border-2 border-amber-500/40 rounded-2xl p-4 text-center space-y-2 flex flex-col justify-between relative">
+                        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-amber-500 text-dark text-[9px] font-black px-2 py-0.5 rounded-full uppercase">Popular</span>
+                        <div>
+                            <span class="text-[10px] font-bold text-amber-400 uppercase">Trimestral</span>
+                            <div class="text-xl font-black text-amber-400 mt-1">$18.00</div>
+                            <p class="text-[11px] text-slate-300 mt-1">Proyecta tu comercio por trimestre con ahorro.</p>
+                        </div>
+                        <span class="text-[10px] text-amber-400/90 pt-2 border-t border-slate-800">Equivale a $6/mes</span>
+                    </div>
+
+                    <div class="bg-slate-900/80 border-2 border-amber-500/60 rounded-2xl p-4 text-center space-y-2 flex flex-col justify-between relative">
+                        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-amber-500 text-dark text-[9px] font-black px-2 py-0.5 rounded-full uppercase">Ahorra $20</span>
+                        <div>
+                            <span class="text-[10px] font-bold text-amber-300 uppercase">Anual VIP</span>
+                            <div class="text-2xl font-black text-amber-400 mt-1">$40.00</div>
+                            <p class="text-[11px] text-slate-300 mt-1">¡12 meses completos al mejor precio y soporte VIP!</p>
+                        </div>
+                        <span class="text-[10px] text-amber-300 pt-2 border-t border-slate-800">Solo $3.33 / mes</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-3 text-center text-xs text-slate-400">
+                    💡 Al finalizar tus 15 días de prueba, podrás cancelar el plan que prefieras a través de Pago Móvil Mercantil o Binance Pay desde este mismo panel.
+                </div>
+
+                <div class="text-center pt-2">
+                    <button onclick="cerrarModalBienvenida()" class="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-dark font-black py-3 px-8 rounded-xl transition shadow-lg text-xs sm:text-sm">
+                        ¡Entendido, ir a mi Panel de Administración! 🚀
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL PARA AMPLIAR CÓDIGO QR -->
     <div class="modal fade" id="modalQrGrande" tabindex="-1" aria-hidden="true">
@@ -425,6 +483,7 @@
         let tiendaSlug = (localStorage.getItem('sesion_vendedor') || "").trim().toLowerCase();
         let modalBootstrap;
         let modalQrBootstrap;
+        let modalBienvenidaBootstrap;
         let base64LogotipoTemp = "";
         let base64ProductoTemp = "";
 
@@ -435,12 +494,13 @@
             }
             modalBootstrap = new bootstrap.Modal(document.getElementById('modalProducto'));
             modalQrBootstrap = new bootstrap.Modal(document.getElementById('modalQrGrande'));
+            modalBienvenidaBootstrap = new bootstrap.Modal(document.getElementById('modalBienvenidaAdmin'));
+            
             configurarDragAndDropLogo();
             configurarInputProductoFoto();
             await cargarPanelAdmin();
         });
 
-        // Función para alternar el visor de pagos QR en el panel admin
         function cambiarVisorPago(metodo) {
             const visorMercantil = document.getElementById('visor-mercantil');
             const visorBinance = document.getElementById('visor-binance');
@@ -460,14 +520,18 @@
             }
         }
 
-        // Función para abrir el QR en tamaño grande
         function abrirModalQr(rutaImg, titulo) {
             document.getElementById('modal-qr-titulo').textContent = titulo;
             document.getElementById('img-qr-modal').src = rutaImg;
             modalQrBootstrap.show();
         }
 
-        // Función para copiar todos los datos del Pago Móvil de un solo golpe
+        function cerrarModalBienvenida() {
+            modalBienvenidaBootstrap.hide();
+            // Guardamos en localStorage que este administrador ya vio la bienvenida
+            localStorage.setItem(`bienvenida_vista_${tiendaSlug}`, 'true');
+        }
+
         function copiarDatosPagoMovil() {
             const datosTexto = "Banco: 0105 - Mercantil\nTeléfono: 0412-5941381\nCédula/RIF: V-32.411.077\nMontos: $5 (Mensual) | $18 (Trimestral) | $40 (Anual)";
             navigator.clipboard.writeText(datosTexto).then(() => {
@@ -495,7 +559,12 @@
 
                 tiendaSlug = slugReal;
 
-                // Generar Enlace de Vitrina Limpio y Correcto
+                // Verificamos si es primera vez que ingresa para mostrar el modal de bienvenida
+                const yaVioBienvenida = localStorage.getItem(`bienvenida_vista_${tiendaSlug}`);
+                if (!yaVioBienvenida) {
+                    modalBienvenidaBootstrap.show();
+                }
+
                 const pathnameLimpio = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
                 const baseUrlActual = window.location.origin + pathnameLimpio;
                 const enlaceVitrinaCompleto = `${baseUrlActual}index.html?tienda=${tiendaSlug}`;
@@ -513,7 +582,7 @@
                     mostrarVistaPreviaLogo(base64LogotipoTemp);
                 }
 
-                const diasRestantes = tienda.diasSolventes !== undefined ? tienda.diasSolventes : 30;
+                const diasRestantes = tienda.diasSolventes !== undefined ? tienda.diasSolventes : 15; // Por defecto 15 días de prueba inicial
                 const banner = document.getElementById('alerta-suscripcion-banner');
                 const tituloBanner = document.getElementById('alerta-sus-titulo');
                 const textoBanner = document.getElementById('alerta-sus-texto');
@@ -523,7 +592,7 @@
 
                 badgeDias.textContent = `${diasRestantes} Días Solventes`;
 
-                const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción (Plan Mensual $5, Trimestral $18 o Anual $40). Adjunto mi comprobante.`);
+                const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción. Adjunto mi comprobante.`);
                 document.getElementById('link-panel-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWaPanel}`;
 
                 if (tienda.bloqueado) {
@@ -541,13 +610,13 @@
 
                 if (diasRestantes <= 5 && diasRestantes > 0) {
                     banner.className = "rounded-2xl p-4 shadow-lg border bg-amber-500/10 border-amber-500/30 flex items-center justify-between";
-                    tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de suscripción`;
+                    tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de prueba / suscripción`;
                     textoBanner.textContent = "Realiza tu pago mensual ($5), trimestral ($18) o anual ($40) a tiempo para evitar suspensiones.";
                     banner.classList.remove('hidden');
                 } else if (diasRestantes > 5) {
                     banner.className = "rounded-2xl p-4 shadow-lg border bg-emerald-500/10 border-emerald-500/30 flex items-center justify-between";
-                    tituloBanner.textContent = `Estado de Suscripción: Solvente`;
-                    textoBanner.textContent = `Tienes ${diasRestantes} días de acceso continuo en la plataforma.`;
+                    tituloBanner.textContent = `Estado de Suscripción: Activa (Prueba Gratuita)`;
+                    textoBanner.textContent = `Tienes ${diasRestantes} días de acceso continuo en la plataforma Cloudflare Edge.`;
                     banner.classList.remove('hidden');
                 } else {
                     banner.classList.add('hidden');
