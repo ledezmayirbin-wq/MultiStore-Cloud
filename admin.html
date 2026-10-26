@@ -98,7 +98,7 @@
                 </span>
                 <h2 class="text-2xl font-black text-white">Tu tienda está suspendida</h2>
                 <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                    El periodo de vigencia de tu plataforma ha expirado. Para reactivar tu acceso y el de tus clientes de forma inmediata, realiza el pago de tu renovación mensual por solo $5.00.
+                    El periodo de vigencia ha expirado. Elige tu plan de renovación ($5 mensual, $18 trimestral o $40 anual) para reactivar tu acceso de forma inmediata.
                 </p>
             </div>
 
@@ -153,12 +153,56 @@
                 </div>
             </section>
 
+            <!-- SECCIÓN DE LOS 3 PLANES (MENSUAL, TRIMESTRAL Y ANUAL) -->
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- 1. Plan Mensual Pro -->
+                <div class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl space-y-3 flex flex-col justify-between">
+                    <div>
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700 uppercase">Estándar</span>
+                        <h3 class="text-base font-black text-white mt-2">Plan Mensual Pro</h3>
+                        <div class="text-2xl font-black text-white mt-1">$5.00 <span class="text-xs text-slate-400 font-normal">/ mes</span></div>
+                        <p class="text-xs text-slate-400 mt-2 leading-relaxed">Ideal para mantener tu tienda activa mes a mes con respaldo en Cloudflare Edge.</p>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
+                        Pago mes a mes sin ataduras.
+                    </div>
+                </div>
+
+                <!-- 2. Plan Trimestral (El del medio / Sugerido) -->
+                <div class="bg-cardbg border-2 border-amber-500/40 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl space-y-3 flex flex-col justify-between relative">
+                    <span class="absolute top-4 right-4 bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30 uppercase">Popular</span>
+                    <div>
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase">Ahorro Trimestral</span>
+                        <h3 class="text-base font-black text-white mt-2">Plan Trimestral</h3>
+                        <div class="text-2xl font-black text-amber-400 mt-1">$18.00 <span class="text-xs text-slate-300 font-normal">/ 3 meses</span></div>
+                        <p class="text-xs text-slate-300 mt-2 leading-relaxed">Perfecto para proyectar tu comercio por trimestre con un pequeño descuento acumulado.</p>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800/80 text-[11px] text-amber-400/90">
+                        ⚡ Equivale a $6.00 por mes con comodidad.
+                    </div>
+                </div>
+
+                <!-- 3. Plan Anual VIP -->
+                <div class="bg-gradient-to-br from-amber-500/10 via-cardbg to-slate-900 border-2 border-amber-500/60 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl space-y-3 flex flex-col justify-between relative overflow-hidden">
+                    <span class="absolute top-4 right-4 bg-amber-500 text-dark text-[10px] font-black px-2.5 py-1 rounded-full shadow-md uppercase">Ahorra $20</span>
+                    <div>
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase">Máximo Ahorro</span>
+                        <h3 class="text-base font-black text-white mt-2">Plan Anual VIP</h3>
+                        <div class="text-3xl font-black text-amber-400 mt-1">$40.00 <span class="text-xs text-slate-300 font-normal">/ año</span></div>
+                        <p class="text-xs text-slate-300 mt-2 leading-relaxed">¡Asegura 12 meses completos al mejor precio y olvídate de renovaciones frecuentes!</p>
+                    </div>
+                    <div class="pt-2 border-t border-amber-500/20 text-[11px] text-amber-300/90 font-medium">
+                        ✨ ¡Solo $3.33 al mes con soporte VIP prioritario!
+                    </div>
+                </div>
+            </section>
+
             <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO CON VISOR QR INTERACTIVO Y VISTA GRANDE -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
                 <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
                     <div>
                         <h2 class="text-base sm:text-lg font-black text-white">Métodos de Pago y Códigos QR</h2>
-                        <p class="text-xs text-slate-400">Consulta los datos o haz clic en cualquier QR para abrirlo en tamaño grande.</p>
+                        <p class="text-xs text-slate-400">Consulta los datos para tu plan elegido ($5, $18 o $40). Haz clic en cualquier QR para ampliarlo.</p>
                     </div>
                     <span id="badge-dias-panel" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">-- Días Solventes</span>
                 </div>
@@ -182,7 +226,7 @@
                                 <p><strong>Banco:</strong> 0105 - Mercantil</p>
                                 <p><strong>Teléfono:</strong> 0412-5941381</p>
                                 <p><strong>Cédula / RIF:</strong> V-32.411.077</p>
-                                <p><strong>Monto:</strong> <span class="text-emerald-400 font-bold">$5.00 USD (al cambio BCV)</span></p>
+                                <p><strong>Montos:</strong> <span class="text-emerald-400 font-bold">$5 (Mensual) | $18 (Trimestral) | $40 (Anual)</span></p>
                             </div>
                             <!-- Botón para copiar todos los datos juntos -->
                             <div>
@@ -205,9 +249,10 @@
                         <div class="text-left space-y-2 w-full">
                             <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">💎 Datos de Binance Pay (USDT)</h4>
                             <div class="text-xs text-slate-300 space-y-1.5 font-mono">
-                                <p><strong>Binance ID: 1262454700 / Email:</strong> ledezmayirbin@gmail.com</p>
+                                <p><strong>Binance ID:</strong> 1262454700</p>
+                                <p><strong>Email:</strong> ledezmayirbin@gmail.com</p>
                                 <p><strong>Red recomendada:</strong> BEP20 / TRC20</p>
-                                <p><strong>Monto exacto:</strong> <span class="text-emerald-400 font-bold">$5.00 USDT</span></p>
+                                <p><strong>Montos exactos:</strong> <span class="text-emerald-400 font-bold">$5.00 | $18.00 | $40.00 USDT</span></p>
                             </div>
                         </div>
                         <!-- Contenedor del QR de Binance con cursor de zoom -->
@@ -424,7 +469,7 @@
 
         // Función para copiar todos los datos del Pago Móvil de un solo golpe
         function copiarDatosPagoMovil() {
-            const datosTexto = "Banco: 0105 - Mercantil\nTeléfono: 0412-5941381\nCédula/RIF: V-32.411.077\nMonto: $5.00 USD";
+            const datosTexto = "Banco: 0105 - Mercantil\nTeléfono: 0412-5941381\nCédula/RIF: V-32.411.077\nMontos: $5 (Mensual) | $18 (Trimestral) | $40 (Anual)";
             navigator.clipboard.writeText(datosTexto).then(() => {
                 mostrarAlertaSync("¡Datos de Pago Móvil copiados al portapapeles!");
             }).catch(err => {
@@ -478,7 +523,7 @@
 
                 badgeDias.textContent = `${diasRestantes} Días Solventes`;
 
-                const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación mensual de suscripción de $5.00. Adjunto mi comprobante.`);
+                const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción (Plan Mensual $5, Trimestral $18 o Anual $40). Adjunto mi comprobante.`);
                 document.getElementById('link-panel-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWaPanel}`;
 
                 if (tienda.bloqueado) {
@@ -486,7 +531,7 @@
                     pantallaBloqueo.classList.remove('hidden');
                     banner.classList.add('hidden');
 
-                    const mensajeWa = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación mensual de suscripción de $5.00. Adjunto mi comprobante para la reactivación.`);
+                    const mensajeWa = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación. Adjunto mi comprobante para la reactivación.`);
                     document.getElementById('link-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWa}`;
                     return;
                 } else {
@@ -497,7 +542,7 @@
                 if (diasRestantes <= 5 && diasRestantes > 0) {
                     banner.className = "rounded-2xl p-4 shadow-lg border bg-amber-500/10 border-amber-500/30 flex items-center justify-between";
                     tituloBanner.textContent = `¡Atención! Te quedan ${diasRestantes} días de suscripción`;
-                    textoBanner.textContent = "Realiza tu pago de $5.00 a tiempo con los datos o QR de abajo para evitar la suspensión temporal.";
+                    textoBanner.textContent = "Realiza tu pago mensual ($5), trimestral ($18) o anual ($40) a tiempo para evitar suspensiones.";
                     banner.classList.remove('hidden');
                 } else if (diasRestantes > 5) {
                     banner.className = "rounded-2xl p-4 shadow-lg border bg-emerald-500/10 border-emerald-500/30 flex items-center justify-between";
