@@ -377,10 +377,10 @@
             document.getElementById('nav-store-name').textContent = tienda.nombreTienda;
             document.getElementById('link-ver-tienda').href = `index.html?tienda=${tiendaSlug}`;
 
-            // GENERAR Y MOSTRAR ENLACE DE LA VITRINA EN EL INPUT
-            const baseUrlActual = window.location.origin + window.location.pathname.replace('admin.html', '');
+          // LÍNEA NUEVA CORREGIDA:
+            const pathnameLimpio = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+            const baseUrlActual = window.location.origin + pathnameLimpio;
             const enlaceVitrinaCompleto = `${baseUrlActual}index.html?tienda=${tiendaSlug}`;
-            document.getElementById('input-enlace-tienda').value = enlaceVitrinaCompleto;
 
             if (base64LogotipoTemp) {
                 mostrarVistaPreviaLogo(base64LogotipoTemp);
