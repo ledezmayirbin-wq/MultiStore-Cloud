@@ -357,7 +357,7 @@
             await cargarPanelAdmin();
         });
 
-        async function cargarPanelAdmin() {
+async function cargarPanelAdmin() {
             const db = await obtenerBaseDatos();
             const slugReal = Object.keys(db).find(k => k.trim().toLowerCase() === tiendaSlug.toLowerCase()) || tiendaSlug;
             const tienda = db[slugReal];
@@ -370,12 +370,25 @@
             }
 
             tiendaSlug = slugReal;
+            
+            // ---> PONEMOS EL ENLACE DE VITRINA AQUÍ DIRECTAMENTE <---
+            const pathnameLimpio = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+            const baseUrlActual = window.location.origin + pathnameLimpio;
+            const enlaceVitrinaCompleto = `${baseUrlActual}index.html?tienda=${tiendaSlug}`;
+            const inputEnlace = document.getElementById('input-enlace-tienda');
+            if (inputEnlace) {
+                inputEnlace.value = enlaceVitrinaCompleto;
+            }
+            // --------------------------------------------------------
+
             document.getElementById('config-nombre').value = tienda.nombreTienda || "";
             document.getElementById('config-whatsapp').value = tienda.whatsapp || "";
             base64LogotipoTemp = tienda.logoUrl || "";
 
             document.getElementById('nav-store-name').textContent = tienda.nombreTienda;
             document.getElementById('link-ver-tienda').href = `index.html?tienda=${tiendaSlug}`;
+            
+            // El resto de tu código sigue exactamente igual...
 
           // LÍNEA NUEVA CORREGIDA:
             const pathnameLimpio = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
