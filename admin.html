@@ -660,18 +660,38 @@
             }
         }
 
-        async function eliminarProducto(index) {
+async function eliminarProducto(index) {
             if (confirm("¿Estás seguro de eliminar este producto?")) {
-                const db = await obtenerBaseDatos();
-                if (db[tiendaSlug] && db[tiendaSlug].productos) {
-                    db[tiendaSlug].productos.splice(index, 1);
-                    const guardado = await guardarBaseDatos(db);
-                    if (guardado) {
-                        mostrarAlertaSync("Producto eliminado.");
-                        await renderizarTablaProductos();
-                    } else {
-                        alert("Error al eliminar en la nube.");
+                try {
+                    const db = await obtenerBaseDatos();
+                    const tienda = db[tiendaSlug];
+                    
+                    if (!tienda || !tienda.productos || !tienda.productos[index]) {
+                        alert("Producto no encontrado.");
+                        return;
                     }
+
+                    const prodAEliminar = tienda.productos[index];
+
+                    // Si el producto tiene un ID en la base de datos D1, lo borramos en la nube con la nueva ruta
+                    if (prodAEliminar.id) {
+                        const res = await fetch(`${API_BASE_URL}/eliminar-producto`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ productoId: prodAEliminar.id })
+                        });
+
+                        const resultado = await res.json();
+                        if (!res.ok) throw new Error(resultado.error || "No se pudo eliminar el producto en la nube.");
+                    }
+
+                    // Lo quitamos del arreglo local y actualizamos la tabla de inmediato
+                    tienda.productos.splice(index, 1);
+                    mostrarAlertaSync("Producto eliminado correctamente.");
+                    await renderizarTablaProductos();
+
+                } catch (err) {
+                    alert("Error al eliminar producto: " + err.message);
                 }
             }
         }
