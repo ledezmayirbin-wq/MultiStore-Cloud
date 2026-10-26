@@ -281,7 +281,7 @@
                     </div>
                     <div class="col-md-5">
                         <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider">WhatsApp de Pedidos</label>
-                        <input type="text" id="config-whatsapp" placeholder="584121234567" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-2.5 text-sm">
+                        <input type="text" id="config-whatsapp" placeholder="584125941381" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-2.5 text-sm">
                     </div>
 
                     <div class="col-12">
@@ -593,7 +593,7 @@
                 badgeDias.textContent = `${diasRestantes} Días Solventes`;
 
                 const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción. Adjunto mi comprobante.`);
-                document.getElementById('link-panel-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWaPanel}`;
+                document.getElementById('link-panel-renovar-whatsapp').href = `https://wa.me/584125941381?text=${mensajeWaPanel}`;
 
                 if (tienda.bloqueado) {
                     panelActivo.classList.add('hidden');
@@ -601,7 +601,7 @@
                     banner.classList.add('hidden');
 
                     const mensajeWa = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación. Adjunto mi comprobante para la reactivación.`);
-                    document.getElementById('link-renovar-whatsapp').href = `https://wa.me/584121234567?text=${mensajeWa}`;
+                    document.getElementById('link-renovar-whatsapp').href = `https://wa.me/584125941381?text=${mensajeWa}`;
                     return;
                 } else {
                     panelActivo.classList.remove('hidden');
