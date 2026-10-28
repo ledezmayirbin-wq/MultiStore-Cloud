@@ -313,7 +313,7 @@
                 <div class="d-flex flex-column sm:flex-row justify-content-between align-items-sm-center gap-3 border-bottom border-slate-800 pb-4">
                     <div>
                         <h2 class="text-lg sm:text-xl font-black text-white m-0">Catálogo de Productos</h2>
-                        <p class="text-xs sm:text-sm text-slate-400 m-0 mt-0.5">Agrega o edita las prendas de tu inventario.</p>
+                        <p class="text-xs sm:text-sm text-slate-400 m-0 mt-0.5">Agrega o edita los artículos de tu inventario.</p>
                     </div>
                     <button onclick="abrirModalProducto()" class="btn btn-warning fw-bold text-dark px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg">
                         + Nuevo Producto
@@ -325,6 +325,7 @@
                         <thead class="text-secondary uppercase text-[10px] sm:text-xs">
                             <tr>
                                 <th class="py-3 px-3">Producto</th>
+                                <th class="py-3 px-3">Categoría</th>
                                 <th class="py-3 px-3">Precio</th>
                                 <th class="py-3 px-3 hidden sm:table-cell">Detalles</th>
                                 <th class="py-3 px-3 text-end">Acciones</th>
@@ -337,7 +338,7 @@
         </div>
     </main>
 
-    <!-- MODAL DE BIENVENIDA Y SELECCIÓN DE PLANES (NUEVOS ADMINS) -->
+    <!-- MODAL DE BIENVENIDA Y SELECCIÓN DE PLANES -->
     <div class="modal fade" id="modalBienvenidaAdmin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content bg-cardbg border border-amber-500/30 text-white rounded-3xl p-4 sm:p-6 shadow-2xl space-y-6">
@@ -348,44 +349,8 @@
                     </span>
                     <h2 class="text-xl sm:text-2xl font-black text-white">Tu tienda ha sido desplegada en Cloudflare Edge</h2>
                     <p class="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-                        Nos alegra tenerte a bordo. Tienes activados <strong class="text-amber-400">15 días de prueba gratuita</strong> para configurar tu catálogo, probar tu vitrina y recibir pedidos por WhatsApp sin compromisos.
+                        Nos alegra tenerte a bordo. Tienes activados <strong class="text-amber-400">15 días de prueba gratuita</strong> para configurar tu catálogo por categorías, probar tu vitrina y recibir pedidos por WhatsApp.
                     </p>
-                </div>
-
-                <!-- MINI TARJETAS DE PLANES DENTRO DEL MODAL -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 text-center space-y-2 flex flex-col justify-between">
-                        <div>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase">Mensual Pro</span>
-                            <div class="text-xl font-black text-white mt-1">$5.00</div>
-                            <p class="text-[11px] text-slate-400 mt-1">Ideal para operar mes a mes con total flexibilidad.</p>
-                        </div>
-                        <span class="text-[10px] text-slate-500 pt-2 border-t border-slate-800">Sin ataduras</span>
-                    </div>
-
-                    <div class="bg-slate-900/80 border-2 border-amber-500/40 rounded-2xl p-4 text-center space-y-2 flex flex-col justify-between relative">
-                        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-amber-500 text-dark text-[9px] font-black px-2 py-0.5 rounded-full uppercase">Popular</span>
-                        <div>
-                            <span class="text-[10px] font-bold text-amber-400 uppercase">Trimestral</span>
-                            <div class="text-xl font-black text-amber-400 mt-1">$14.00</div>
-                            <p class="text-[11px] text-slate-300 mt-1">Proyecta tu comercio por trimestre con ahorro.</p>
-                        </div>
-                        <span class="text-[10px] text-amber-400/90 pt-2 border-t border-slate-800">Equivale a $6/mes</span>
-                    </div>
-
-                    <div class="bg-slate-900/80 border-2 border-amber-500/60 rounded-2xl p-4 text-center space-y-2 flex flex-col justify-between relative">
-                        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-amber-500 text-dark text-[9px] font-black px-2 py-0.5 rounded-full uppercase">Ahorra $20</span>
-                        <div>
-                            <span class="text-[10px] font-bold text-amber-300 uppercase">Anual VIP</span>
-                            <div class="text-2xl font-black text-amber-400 mt-1">$40.00</div>
-                            <p class="text-[11px] text-slate-300 mt-1">¡12 meses completos al mejor precio y soporte VIP!</p>
-                        </div>
-                        <span class="text-[10px] text-amber-300 pt-2 border-t border-slate-800">Solo $3.33 / mes</span>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-3 text-center text-xs text-slate-400">
-                    💡 Al finalizar tus 15 días de prueba, podrás cancelar el plan que prefieras a través de Pago Móvil Mercantil o Binance Pay desde este mismo panel.
                 </div>
 
                 <div class="text-center pt-2">
@@ -414,7 +379,7 @@
         </div>
     </div>
 
-    <!-- MODAL PRODUCTO -->
+    <!-- MODAL PRODUCTO CON CAMPOS DINÁMICOS POR CATEGORÍA -->
     <div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content bg-cardbg border border-slate-800 text-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-2xl">
@@ -427,27 +392,48 @@
                         <input type="hidden" id="prod-index" value="-1">
                         
                         <div class="col-12">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Nombre</label>
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Nombre del Producto</label>
                             <input type="text" id="prod-nombre" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                        </div>
+
+                        <!-- Selector de Categoría Principal -->
+                        <div class="col-12">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Categoría</label>
+                            <select id="prod-categoria" onchange="cambiarCamposCategoria()" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                                <option value="prendas">Prendas y Ropa</option>
+                                <option value="calzado">Calzado</option>
+                                <option value="accesorios">Accesorios y Otros</option>
+                            </select>
                         </div>
                         
                         <div class="col-6">
                             <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Precio ($)</label>
                             <input type="number" step="0.01" id="prod-precio" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
                         </div>
-                        
-                        <div class="col-6">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Tallas</label>
-                            <input type="text" id="prod-tallas" placeholder="S, M, L" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+
+                        <!-- Campos Dinámicos según la Categoría -->
+                        <div class="col-6" id="contenedor-tallas-prendas">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Tallas (Ropa)</label>
+                            <input type="text" id="prod-tallas" placeholder="Ej: S, M, L, XL" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                        </div>
+
+                        <div class="col-6 hidden" id="contenedor-tallas-calzado">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Tallas (Calzado)</label>
+                            <input type="text" id="prod-tallas-calzado" placeholder="Ej: 38, 39, 40, 42" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                        </div>
+
+                        <div class="col-6 hidden" id="contenedor-especificacion-accesorio">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Especificación / Material</label>
+                            <input type="text" id="prod-especificacion" placeholder="Ej: Acero, Ajustable" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
                         </div>
                         
                         <div class="col-12">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Colores</label>
-                            <input type="text" id="prod-colores" placeholder="Rojo, Azul" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Colores Disponibles</label>
+                            <input type="text" id="prod-colores" placeholder="Ej: Negro, Blanco, Dorado" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Foto</label>
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Foto del Producto</label>
                             <input type="file" id="prod-file-input" accept="image/*" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-xs py-2">
                         </div>
 
@@ -501,6 +487,25 @@
             await cargarPanelAdmin();
         });
 
+        function cambiarCamposCategoria() {
+            const categoria = document.getElementById('prod-categoria').value;
+            const boxPrendas = document.getElementById('contenedor-tallas-prendas');
+            const boxCalzado = document.getElementById('contenedor-tallas-calzado');
+            const boxAccesorio = document.getElementById('contenedor-especificacion-accesorio');
+
+            boxPrendas.classList.add('hidden');
+            boxCalzado.classList.add('hidden');
+            boxAccesorio.classList.add('hidden');
+
+            if (categoria === 'prendas') {
+                boxPrendas.classList.remove('hidden');
+            } else if (categoria === 'calzado') {
+                boxCalzado.classList.remove('hidden');
+            } else if (categoria === 'accesorios') {
+                boxAccesorio.classList.remove('hidden');
+            }
+        }
+
         function cambiarVisorPago(metodo) {
             const visorMercantil = document.getElementById('visor-mercantil');
             const visorBinance = document.getElementById('visor-binance');
@@ -528,7 +533,6 @@
 
         function cerrarModalBienvenida() {
             modalBienvenidaBootstrap.hide();
-            // Guardamos en localStorage que este administrador ya vio la bienvenida
             localStorage.setItem(`bienvenida_vista_${tiendaSlug}`, 'true');
         }
 
@@ -559,7 +563,6 @@
 
                 tiendaSlug = slugReal;
 
-                // Verificamos si es primera vez que ingresa para mostrar el modal de bienvenida
                 const yaVioBienvenida = localStorage.getItem(`bienvenida_vista_${tiendaSlug}`);
                 if (!yaVioBienvenida) {
                     modalBienvenidaBootstrap.show();
@@ -582,7 +585,7 @@
                     mostrarVistaPreviaLogo(base64LogotipoTemp);
                 }
 
-                const diasRestantes = tienda.diasSolventes !== undefined ? tienda.diasSolventes : 15; // Por defecto 15 días de prueba inicial
+                const diasRestantes = tienda.diasSolventes !== undefined ? tienda.diasSolventes : 15;
                 const banner = document.getElementById('alerta-suscripcion-banner');
                 const tituloBanner = document.getElementById('alerta-sus-titulo');
                 const textoBanner = document.getElementById('alerta-sus-texto');
@@ -743,11 +746,16 @@
             tabla.innerHTML = "";
 
             if (!tienda || !tienda.productos || tienda.productos.length === 0) {
-                tabla.innerHTML = `<tr><td colspan="4" class="text-center py-5 text-secondary">No hay productos registrados.</td></tr>`;
+                tabla.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-secondary">No hay productos registrados.</td></tr>`;
                 return;
             }
 
             tienda.productos.forEach((prod, index) => {
+                let categoriaBadge = prod.categoria || 'prendas';
+                let detallesExtra = `Tallas: ${prod.tallas || 'Única'}`;
+                if (categoriaBadge === 'calzado') detallesExtra = `Tallas: ${prod.tallasCalzado || 'N/D'}`;
+                if (categoriaBadge === 'accesorios') detallesExtra = `Material: ${prod.especificacion || 'N/D'}`;
+
                 tabla.innerHTML += `
                     <tr>
                         <td class="py-3 px-3">
@@ -759,8 +767,11 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="py-3 px-3">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-amber-400 uppercase border border-slate-700">${categoriaBadge}</span>
+                        </td>
                         <td class="py-3 px-3 fw-bold text-success text-xs sm:text-sm">$${parseFloat(prod.precio || 0).toFixed(2)}</td>
-                        <td class="py-3 px-3 text-secondary text-[11px] hidden sm:table-cell">Tallas: ${prod.tallas || 'Única'} <br> Colores: ${prod.colores || 'Varios'}</td>
+                        <td class="py-3 px-3 text-secondary text-[11px] hidden sm:table-cell">${detallesExtra} <br> Colores: ${prod.colores || 'Varios'}</td>
                         <td class="py-3 px-3 text-end">
                             <div class="flex items-center justify-end gap-1">
                                 <button onclick="abrirModalProducto(${index})" class="btn btn-outline-warning btn-sm rounded-pill px-2.5 py-1 text-[10px] sm:text-xs">Editar</button>
@@ -784,8 +795,13 @@
                 document.getElementById('modal-titulo').textContent = "Editar Producto";
                 document.getElementById('prod-index').value = index;
                 document.getElementById('prod-nombre').value = prod.nombre;
+                document.getElementById('prod-categoria').value = prod.categoria || 'prendas';
+                cambiarCamposCategoria();
+
                 document.getElementById('prod-precio').value = prod.precio;
-                document.getElementById('prod-tallas').value = prod.tallas;
+                document.getElementById('prod-tallas').value = prod.tallas || '';
+                document.getElementById('prod-tallas-calzado').value = prod.tallasCalzado || '';
+                document.getElementById('prod-especificacion').value = prod.especificacion || '';
                 document.getElementById('prod-colores').value = prod.colores;
                 document.getElementById('prod-descripcion').value = prod.descripcion;
                 
@@ -797,6 +813,8 @@
                 document.getElementById('modal-titulo').textContent = "Nuevo Producto";
                 document.getElementById('form-producto').reset();
                 document.getElementById('prod-index').value = -1;
+                document.getElementById('prod-categoria').value = 'prendas';
+                cambiarCamposCategoria();
                 document.getElementById('prod-imagen-base64').value = "";
                 base64ProductoTemp = "";
                 box.classList.add('hidden');
@@ -826,12 +844,16 @@
                 if (!db[tiendaSlug].productos) db[tiendaSlug].productos = [];
 
                 const productoExistente = (index > -1 && db[tiendaSlug].productos[index]) ? db[tiendaSlug].productos[index] : null;
+                const categoriaSeleccionada = document.getElementById('prod-categoria').value;
 
                 const nuevoProd = {
                     id: productoExistente ? productoExistente.id : undefined,
                     nombre: document.getElementById('prod-nombre').value.trim(),
+                    categoria: categoriaSeleccionada,
                     precio: parseFloat(document.getElementById('prod-precio').value),
-                    tallas: document.getElementById('prod-tallas').value.trim(),
+                    tallas: categoriaSeleccionada === 'prendas' ? document.getElementById('prod-tallas').value.trim() : '',
+                    tallasCalzado: categoriaSeleccionada === 'calzado' ? document.getElementById('prod-tallas-calzado').value.trim() : '',
+                    especificacion: categoriaSeleccionada === 'accesorios' ? document.getElementById('prod-especificacion').value.trim() : '',
                     colores: document.getElementById('prod-colores').value.trim(),
                     url_imagen: imagenFinal,
                     descripcion: document.getElementById('prod-descripcion').value.trim()
