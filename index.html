@@ -117,7 +117,7 @@
             <div id="grid-lista-tiendas" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 pt-2"></div>
         </div>
         
-        <!-- VISTA 3: Vitrina de Productos -->
+        <!-- VISTA 3: Vitrina de Productos con Búsqueda y Categorías Inteligentes -->
         <div id="vista-vitrina-productos" class="w-full space-y-6 sm:space-y-8 hidden">
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div>
@@ -127,6 +127,15 @@
                     <h2 id="vitrina-titulo" class="text-xl sm:text-2xl font-black text-white">Catálogo de Productos</h2>
                     <p class="text-[11px] sm:text-xs text-slate-400">Haz clic en cualquier producto para ver su vista previa ampliada y pedir vía WhatsApp.</p>
                 </div>
+            </div>
+
+            <!-- BARRA DE BÚSQUEDA Y FILTROS INTELIGENTES POR CATEGORÍA -->
+            <div class="space-y-3 pb-2">
+                <div class="w-full">
+                    <input type="text" id="input-buscar-producto" oninput="filtrarProductosVitrina()" placeholder="Buscar producto en esta tienda..." class="w-full bg-cardbg border border-slate-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-500 placeholder-slate-500 shadow-inner">
+                </div>
+                <!-- Contenedor dinámico: Solo muestra las categorías que tienen stock real -->
+                <div id="contenedor-categorias-dinamicas" class="flex flex-wrap gap-2 pt-1"></div>
             </div>
 
             <div id="grid-productos-tienda" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-6">
@@ -139,23 +148,22 @@
 
     </main>
 
-    <!-- MODAL DE VISTA PREVIA AMPLIADA DEL PRODUCTO (ESTILO MÉTRICA 3D, SIN CARRITO) -->
+    <!-- MODAL DE VISTA PREVIA AMPLIADA DEL PRODUCTO -->
     <div class="modal fade" id="modalDetalleProducto" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content bg-cardbg border border-slate-800 text-white rounded-3xl p-4 sm:p-6 shadow-2xl relative">
                 <button type="button" class="btn-close btn-close-white absolute top-4 right-4" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                    <!-- Imagen Ampliada -->
                     <div class="bg-white p-2 rounded-2xl shadow-inner border border-slate-700 flex items-center justify-center">
                         <img id="modal-prod-img" src="" alt="Producto" class="w-full h-64 sm:h-80 object-cover rounded-xl">
                     </div>
-                    <!-- Información y Botón de WhatsApp -->
                     <div class="space-y-4 text-left">
+                        <span id="modal-prod-categoria-badge" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase"></span>
                         <h3 id="modal-prod-nombre" class="text-xl sm:text-2xl font-black text-white"></h3>
                         <div id="modal-prod-precio" class="text-2xl sm:text-3xl font-black text-emerald-400"></div>
                         <p id="modal-prod-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed"></p>
                         <div class="space-y-1 text-xs text-slate-400 font-mono pt-2 border-t border-slate-800">
-                            <p><strong>Tallas:</strong> <span id="modal-prod-tallas" class="text-white"></span></p>
+                            <p id="modal-linea-tallas"><strong>Tallas:</strong> <span id="modal-prod-tallas" class="text-white"></span></p>
                             <p><strong>Colores:</strong> <span id="modal-prod-colores" class="text-white"></span></p>
                         </div>
                         <div class="pt-2">
@@ -179,19 +187,21 @@
         let dbCache = null;
         let modalProductoBootstrap = null;
         let tiendaWhatsAppGlobal = "";
+        let slugTiendaActual = "";
+        let categoriaFiltroActual = "todos";
 
         document.addEventListener('DOMContentLoaded', async () => {
             modalProductoBootstrap = new bootstrap.Modal(document.getElementById('modalDetalleProducto'));
-            const slugTienda = obtenerParametroURL('tienda');
+            slugTiendaActual = obtenerParametroURL('tienda');
             
-            if (slugTienda) {
+            if (slugTiendaActual) {
                 document.getElementById('view-welcome').classList.add('hidden');
             }
 
             dbCache = await obtenerBaseDatos();
 
-            if (slugTienda && dbCache[slugTienda]) {
-                cargarVitrinaTienda(slugTienda, dbCache);
+            if (slugTiendaActual && dbCache[slugTiendaActual]) {
+                cargarVitrinaTienda(slugTiendaActual, dbCache);
             } else {
                 regresarInicio();
             }
@@ -222,7 +232,7 @@
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         </div>
                         <h2 class="text-2xl font-black text-white">Tienda Temporalmente Suspendida</h2>
-                        <p class="text-sm text-slate-400">Este comercio se encuentra inactivo en este momento por actualización de suscripción o falta de pago. Por favor, intenta más tarde.</p>
+                        <p class="text-sm text-slate-400">Este comercio se encuentra inactivo en este momento por actualización de suscripción o falta de pago.</p>
                         <button onclick="regresarInicio()" class="btn btn-warning fw-bold rounded-xl px-6 py-2.5 text-xs text-dark mt-2">← Volver al inicio</button>
                     </div>
                 `;
@@ -234,33 +244,96 @@
             }
 
             document.getElementById('vitrina-titulo').textContent = `Catálogo de ${tienda.nombreTienda}`;
+            
+            // Construir botones dinámicamente según lo que tenga la tienda
+            construirBotonesCategoriasDinamicos(tienda.productos || []);
+            categoriaFiltroActual = 'todos';
+            renderizarProductosFiltrados();
+        }
 
+        function construirBotonesCategoriasDinamicos(productos) {
+            const contenedor = document.getElementById('contenedor-categorias-dinamicas');
+            contenedor.innerHTML = "";
+
+            const categoriasExistentes = [...new Set(productos.map(p => p.categoria || 'prendas'))];
+
+            let htmlBotones = `<button onclick="filtrarPorCategoria('todos')" id="cat-btn-todos" class="bg-amber-500 text-dark font-bold px-4 py-2 rounded-xl text-xs transition shadow-sm">Todos</button>`;
+
+            const nombresLegibles = {
+                'prendas': 'Prendas y Ropa',
+                'calzado': 'Calzado',
+                'accesorios': 'Accesorios'
+            };
+
+            categoriasExistentes.forEach(cat => {
+                const nombreMostrar = nombresLegibles[cat] || cat;
+                htmlBotones += `<button onclick="filtrarPorCategoria('${cat}')" id="cat-btn-${cat}" class="bg-cardbg hover:bg-slate-800 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs transition border border-slate-800">${nombreMostrar}</button>`;
+            });
+
+            contenedor.innerHTML = htmlBotones;
+        }
+
+        function filtrarPorCategoria(categoria) {
+            categoriaFiltroActual = categoria;
+            const botones = document.getElementById('contenedor-categorias-dinamicas').querySelectorAll('button');
+            botones.forEach(btn => {
+                if (btn.id === `cat-btn-${categoria}`) {
+                    btn.className = "bg-amber-500 text-dark font-bold px-4 py-2 rounded-xl text-xs transition shadow-sm";
+                } else {
+                    btn.className = "bg-cardbg hover:bg-slate-800 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs transition border border-slate-800";
+                }
+            });
+            renderizarProductosFiltrados();
+        }
+
+        function filtrarProductosVitrina() {
+            renderizarProductosFiltrados();
+        }
+
+        function renderizarProductosFiltrados() {
+            if (!dbCache || !slugTiendaActual || !dbCache[slugTiendaActual]) return;
+            const tienda = dbCache[slugTiendaActual];
+            const textoBusqueda = document.getElementById('input-buscar-producto').value.toLowerCase().trim();
             const gridProductos = document.getElementById('grid-productos-tienda');
             gridProductos.innerHTML = "";
 
-            if (!tienda.productos || tienda.productos.length === 0) {
-                gridProductos.innerHTML = `<p class="col-span-full text-center text-slate-500 py-12 text-sm bg-cardbg/40 border border-slate-800 rounded-2xl">Esta tienda aún no tiene productos registrados.</p>`;
+            let productos = tienda.productos || [];
+
+            if (categoriaFiltroActual !== 'todos') {
+                productos = productos.filter(p => (p.categoria || 'prendas') === categoriaFiltroActual);
+            }
+
+            if (textoBusqueda) {
+                productos = productos.filter(p => p.nombre.toLowerCase().includes(textoBusqueda) || (p.descripcion || '').toLowerCase().includes(textoBusqueda));
+            }
+
+            if (productos.length === 0) {
+                gridProductos.innerHTML = `<p class="col-span-full text-center text-slate-500 py-12 text-sm bg-cardbg/40 border border-slate-800 rounded-2xl">No se encontraron productos con estos criterios.</p>`;
                 return;
             }
 
-            tienda.productos.forEach((prod, idx) => {
+            productos.forEach((prod) => {
+                const idxReal = tienda.productos.findIndex(p => p === prod);
+                const catProd = prod.categoria || 'prendas';
+                let infoDetalle = `Tallas: ${prod.tallas || 'Única'}`;
+                if (catProd === 'calzado') infoDetalle = `Tallas: ${prod.tallasCalzado || 'N/D'}`;
+                if (catProd === 'accesorios') infoDetalle = `Material: ${prod.especificacion || 'N/D'}`;
+
                 const mensaje = encodeURIComponent(`Hola, me interesa el producto "${prod.nombre}" ($${parseFloat(prod.precio || 0).toFixed(2)}). ¿Está disponible?`);
                 const linkWhatsApp = `https://wa.me/${tiendaWhatsAppGlobal}?text=${mensaje}`;
 
-                // Al hacer clic en la tarjeta o imagen se abre la vista previa ampliada tipo Métrica 3D
                 gridProductos.innerHTML += `
-                    <div onclick="abrirVistaPreviaProducto(${idx})" class="group bg-cardbg border border-slate-800/80 hover:border-amber-500/50 rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+                    <div onclick="abrirVistaPreviaProducto(${idxReal})" class="group bg-cardbg border border-slate-800/80 hover:border-amber-500/50 rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                         <div>
                             <div class="h-36 sm:h-52 w-full bg-slate-900 overflow-hidden relative">
                                 <img src="${prod.url_imagen || ''}" alt="${prod.nombre}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-60"></div>
+                                <span class="absolute top-2 left-2 px-2 py-0.5 bg-slate-950/80 backdrop-blur text-amber-400 text-[9px] font-bold uppercase rounded-lg border border-slate-700">${catProd}</span>
                             </div>
                             <div class="p-3 sm:p-5 space-y-1.5 sm:space-y-2">
                                 <h3 class="font-bold text-xs sm:text-base text-white group-hover:text-amber-400 transition-colors line-clamp-1">${prod.nombre}</h3>
                                 <p class="text-[10px] sm:text-sm text-slate-400 line-clamp-2 leading-relaxed">${prod.descripcion || 'Sin descripción.'}</p>
                                 <div class="hidden sm:flex flex-wrap gap-1.5 pt-1">
-                                    <span class="text-[10px] font-medium bg-slate-900/80 text-slate-300 px-2 py-0.5 rounded-lg border border-slate-800">Tallas: ${prod.tallas || 'Única'}</span>
-                                    <span class="text-[10px] font-medium bg-slate-900/80 text-slate-300 px-2 py-0.5 rounded-lg border border-slate-800">Colores: ${prod.colores || 'Varios'}</span>
+                                    <span class="text-[10px] font-medium bg-slate-900/80 text-slate-300 px-2 py-0.5 rounded-lg border border-slate-800">${infoDetalle}</span>
                                 </div>
                             </div>
                         </div>
@@ -278,19 +351,28 @@
             });
         }
 
-        // Función para abrir la vista modal ampliada del producto específico
         async function abrirVistaPreviaProducto(indexProd) {
-            const slugTienda = obtenerParametroURL('tienda');
-            if (!dbCache || !dbCache[slugTienda]) return;
-            const tienda = dbCache[slugTienda];
+            if (!dbCache || !dbCache[slugTiendaActual]) return;
+            const tienda = dbCache[slugTiendaActual];
             const prod = tienda.productos[indexProd];
             if (!prod) return;
 
+            const catProd = prod.categoria || 'prendas';
             document.getElementById('modal-prod-img').src = prod.url_imagen || '';
+            document.getElementById('modal-prod-categoria-badge').textContent = catProd;
             document.getElementById('modal-prod-nombre').textContent = prod.nombre;
             document.getElementById('modal-prod-precio').textContent = `$${parseFloat(prod.precio || 0).toFixed(2)} USD`;
             document.getElementById('modal-prod-desc').textContent = prod.descripcion || 'Sin descripción detallada para este artículo.';
-            document.getElementById('modal-prod-tallas').textContent = prod.tallas || 'Única';
+            
+            const lineaTallas = document.getElementById('modal-linea-tallas');
+            if (catProd === 'accesorios') {
+                lineaTallas.innerHTML = `<strong>Especificación:</strong> <span class="text-white">${prod.especificacion || 'N/D'}</span>`;
+            } else if (catProd === 'calzado') {
+                lineaTallas.innerHTML = `<strong>Tallas (Calzado):</strong> <span class="text-white">${prod.tallasCalzado || 'N/D'}</span>`;
+            } else {
+                lineaTallas.innerHTML = `<strong>Tallas (Ropa):</strong> <span class="text-white">${prod.tallas || 'Única'}</span>`;
+            }
+
             document.getElementById('modal-prod-colores').textContent = prod.colores || 'Varios';
 
             const mensaje = encodeURIComponent(`Hola, me interesa el producto "${prod.nombre}" ($${parseFloat(prod.precio || 0).toFixed(2)}). ¿Está disponible?`);
@@ -349,8 +431,9 @@
 
         function regresarInicio() {
             window.history.pushState({}, '', window.location.pathname);
-            document.getElementById('vista-selector-tiendas').classList.add('hidden');
+            slugTiendaActual = "";
             document.getElementById('vista-vitrina-productos').classList.add('hidden');
+            document.getElementById('vista-selector-tiendas').classList.add('hidden');
             document.getElementById('view-welcome').classList.remove('hidden');
 
             document.getElementById('header-store-name').textContent = "MultiStore Cloud";
