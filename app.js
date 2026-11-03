@@ -6,6 +6,7 @@ const API_BASE_URL = 'https://api-multistore.ledezmayirbin.workers.dev/api';
 
 /**
  * Obtiene la base de datos completa conectándose a Cloudflare D1.
+ * Aplica el cálculo en tiempo real de los días restantes basados en la fecha de registro.
  */
 async function obtenerBaseDatos() {
     try {
@@ -14,10 +15,52 @@ async function obtenerBaseDatos() {
         });
         
         if (!response.ok) throw new Error("Error al conectar con la base de datos en la nube.");
-        const data = await response.json();
+        let data = await response.json();
         
         if (!data || typeof data !== 'object') {
             return {};
+        }
+
+        // Procesar automáticamente los días restantes reales para cada tienda
+        const ahora = new Date();
+        let dbModificada = false;
+
+        Object.keys(data).forEach(slug => {
+            const tienda = data[slug];
+            
+            // Si la tienda es antigua y no tiene fecha de registro guardada, 
+            // establecemos hoy como su punto de partida real para que el descuento empiece a correr desde este momento.
+            if (!tienda.fechaRegistro) {
+                tienda.fechaRegistro = ahora.toISOString();
+                // Si ya tenía días asignados (ej: 90 o 15), los respetamos como su total inicial
+                if (tienda.diasTotalesOtorgados === undefined) {
+                    tienda.diasTotalesOtorgados = tienda.diasSolventes !== undefined ? tienda.diasSolventes : 15;
+                }
+                dbModificada = true;
+            }
+
+            // Cálculo en tiempo real basado en la fecha de registro
+            if (tienda.fechaRegistro) {
+                const fechaReg = new Date(tienda.fechaRegistro);
+                const diasOtorgados = tienda.diasTotalesOtorgados || 15;
+                
+                const diferenciaMs = ahora - fechaReg;
+                const diasPasados = Math.floor(diferenciaMs / (1000 * 60 * 60 * 24));
+                
+                let diasRestantesReales = diasOtorgados - diasPasados;
+                if (diasRestantesReales < 0) diasRestantesReales = 0;
+                
+                tienda.diasSolventes = diasRestantesReales;
+
+                if (diasRestantesReales === 0 && slug !== 'superadmin') {
+                    tienda.bloqueado = true;
+                }
+            }
+        });
+
+        // Sincronizar si se fijó la fecha base por primera vez
+        if (dbModificada) {
+            guardarBaseDatos(data);
         }
         
         return data;
@@ -39,7 +82,6 @@ async function obtenerBaseDatos() {
  */
 async function guardarBaseDatos(nuevaDb) {
     try {
-        // Intentamos guardar en localStorage de forma segura (atrapando el error si las imágenes son muy grandes)
         try {
             localStorage.setItem('multi_tiendas_db', JSON.stringify(nuevaDb));
         } catch (storageErr) {
@@ -61,14 +103,22 @@ async function guardarBaseDatos(nuevaDb) {
 }
 
 /**
- * Registro rápido y limpio conectado directamente a la API en la nube
+ * Registro rápido y limpio conectado directamente a la API en la nube.
+ * Se asegura de enviar la fecha de registro y los 15 días iniciales por defecto.
  */
 async function registrarNuevaTienda({ usuario, password, nombreTienda, whatsapp }) {
     try {
         const response = await fetch(`${API_BASE_URL}/registrar-tienda`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario, password, nombreTienda, whatsapp })
+            body: JSON.stringify({ 
+                usuario, 
+                password, 
+                nombreTienda, 
+                whatsapp,
+                fechaRegistro: new Date().toISOString(),
+                diasTotalesOtorgados: 15
+            })
         });
 
         const resultado = await response.json();
