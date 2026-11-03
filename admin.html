@@ -308,26 +308,30 @@
                 </form>
             </section>
 
-            <!-- GESTIÓN DE PRODUCTOS -->
-            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
-                <div class="d-flex flex-column sm:flex-row justify-content-between align-items-sm-center gap-3 border-bottom border-slate-800 pb-4">
+            <!-- GESTIÓN DE PRODUCTOS (HÍBRIDO: TARJETAS EN MÓVIL / TABLA EN PC) -->
+            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl space-y-5 sm:space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 border-b border-slate-800 pb-4">
                     <div>
                         <h2 class="text-lg sm:text-xl font-black text-white m-0">Catálogo de Productos</h2>
                         <p class="text-xs sm:text-sm text-slate-400 m-0 mt-0.5">Agrega o edita los artículos de tu inventario.</p>
                     </div>
-                    <button onclick="abrirModalProducto()" class="btn btn-warning fw-bold text-dark px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg">
+                    <button onclick="abrirModalProducto()" class="btn btn-warning fw-bold text-dark px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg w-full sm:w-auto">
                         + Nuevo Producto
                     </button>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table table-dark table-hover align-middle mb-0 bg-transparent text-xs sm:text-sm">
-                        <thead class="text-secondary uppercase text-[10px] sm:text-xs">
+                <!-- VISTA MÓVIL: TARJETAS VERTICALES COMPACTAS (SIN SCROLL LATERAL) -->
+                <div id="cards-productos-movil" class="block md:hidden space-y-3"></div>
+
+                <!-- VISTA ESCRITORIO / TABLET: TABLA CLÁSICA COMPLETA -->
+                <div class="hidden md:block table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0 bg-transparent text-sm">
+                        <thead class="text-secondary uppercase text-xs">
                             <tr>
                                 <th class="py-3 px-3">Producto</th>
                                 <th class="py-3 px-3">Categoría</th>
                                 <th class="py-3 px-3">Precio</th>
-                                <th class="py-3 px-3 hidden sm:table-cell">Detalles</th>
+                                <th class="py-3 px-3">Detalles</th>
                                 <th class="py-3 px-3 text-end">Acciones</th>
                             </tr>
                         </thead>
@@ -743,10 +747,18 @@
             const db = await obtenerBaseDatos();
             const tienda = db[tiendaSlug];
             const tabla = document.getElementById('tabla-productos-admin');
+            const cardsMovil = document.getElementById('cards-productos-movil');
+            
             tabla.innerHTML = "";
+            cardsMovil.innerHTML = "";
 
             if (!tienda || !tienda.productos || tienda.productos.length === 0) {
                 tabla.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-secondary">No hay productos registrados.</td></tr>`;
+                cardsMovil.innerHTML = `
+                    <div class="text-center py-8 px-4 border border-dashed border-slate-800 rounded-2xl bg-slate-900/40">
+                        <p class="text-slate-400 text-xs m-0">No hay productos registrados en el inventario.</p>
+                    </div>
+                `;
                 return;
             }
 
@@ -756,6 +768,7 @@
                 if (categoriaBadge === 'calzado') detallesExtra = `Tallas: ${prod.tallasCalzado || 'N/D'}`;
                 if (categoriaBadge === 'accesorios') detallesExtra = `Material: ${prod.especificacion || 'N/D'}`;
 
+                // 1. RENDERIZADO DE TABLA (PANTALLAS GRANDES)
                 tabla.innerHTML += `
                     <tr>
                         <td class="py-3 px-3">
@@ -771,7 +784,7 @@
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-amber-400 uppercase border border-slate-700">${categoriaBadge}</span>
                         </td>
                         <td class="py-3 px-3 fw-bold text-success text-xs sm:text-sm">$${parseFloat(prod.precio || 0).toFixed(2)}</td>
-                        <td class="py-3 px-3 text-secondary text-[11px] hidden sm:table-cell">${detallesExtra} <br> Colores: ${prod.colores || 'Varios'}</td>
+                        <td class="py-3 px-3 text-secondary text-[11px]">${detallesExtra} <br> Colores: ${prod.colores || 'Varios'}</td>
                         <td class="py-3 px-3 text-end">
                             <div class="flex items-center justify-end gap-1">
                                 <button onclick="abrirModalProducto(${index})" class="btn btn-outline-warning btn-sm rounded-pill px-2.5 py-1 text-[10px] sm:text-xs">Editar</button>
@@ -779,6 +792,37 @@
                             </div>
                         </td>
                     </tr>
+                `;
+
+                // 2. RENDERIZADO DE TARJETAS (PANTALLAS MÓVILES - CERO SCROLL HORIZONTAL)
+                cardsMovil.innerHTML += `
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 space-y-3 shadow-md">
+                        <div class="flex items-start gap-3">
+                            <img src="${prod.url_imagen || ''}" class="w-14 h-14 rounded-xl object-cover shrink-0 border border-slate-700">
+                            
+                            <div class="min-w-0 flex-grow">
+                                <div class="flex items-start justify-between gap-2">
+                                    <h4 class="text-sm font-bold text-white truncate m-0">${prod.nombre}</h4>
+                                    <span class="text-sm font-black text-emerald-400 shrink-0">$${parseFloat(prod.precio || 0).toFixed(2)}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 line-clamp-1 m-0 mt-0.5">${prod.descripcion || 'Sin descripción'}</p>
+                                
+                                <div class="flex items-center gap-2 mt-1.5 flex-wrap">
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-amber-400 uppercase border border-slate-700">${categoriaBadge}</span>
+                                    <span class="text-[10px] text-slate-400 truncate">${detallesExtra} • ${prod.colores || 'Varios'}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/80">
+                            <button onclick="abrirModalProducto(${index})" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold py-2 px-3 rounded-xl text-xs transition border border-amber-500/20 flex items-center justify-center gap-1 shadow-sm">
+                                 Editar
+                            </button>
+                            <button onclick="eliminarProducto(${index})" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-bold py-2 px-3 rounded-xl text-xs transition border border-rose-500/20 flex items-center justify-center gap-1 shadow-sm">
+                                 Borrar
+                            </button>
+                        </div>
+                    </div>
                 `;
             });
         }
