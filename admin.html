@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - MultiStore Cloud</title>
+    <!-- Auth Guard de Seguridad -->
     <script src="auth-guard.js"></script>
+    <!-- Frameworks UI -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -20,57 +22,69 @@
             }
         }
     </script>
+    <style>
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="number"],
+        input[type="url"],
+        input[type="file"],
+        textarea,
+        select,
+        .form-control {
+            background-color: #0b0f19 !important;
+            color: #ffffff !important;
+            border-color: #334155 !important;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        textarea:-webkit-autofill,
+        textarea:-webkit-autofill:hover,
+        textarea:-webkit-autofill:focus {
+            -webkit-text-fill-color: #ffffff !important;
+            -webkit-box-shadow: 0 0 0px 1000px #0b0f19 inset !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus,
+        .form-control:focus {
+            background-color: #0b0f19 !important;
+            color: #ffffff !important;
+            border-color: #f59e0b !important;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
+        }
+
+        ::placeholder {
+            color: #64748b !important;
+            opacity: 1 !important;
+        }
+
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 </head>
 <body class="bg-darkbg text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-white">
-<style>
-    input[type="text"],
-    input[type="password"],
-    input[type="email"],
-    input[type="number"],
-    input[type="url"],
-    input[type="file"],
-    textarea,
-    select,
-    .form-control {
-        background-color: #0b0f19 !important;
-        color: #ffffff !important;
-        border-color: #334155 !important;
-    }
 
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    textarea:-webkit-autofill,
-    textarea:-webkit-autofill:hover,
-    textarea:-webkit-autofill:focus {
-        -webkit-text-fill-color: #ffffff !important;
-        -webkit-box-shadow: 0 0 0px 1000px #0b0f19 inset !important;
-        transition: background-color 5000s ease-in-out 0s;
-    }
-
-    input:focus,
-    textarea:focus,
-    select:focus,
-    .form-control:focus {
-        background-color: #0b0f19 !important;
-        color: #ffffff !important;
-        border-color: #f59e0b !important;
-        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
-    }
-
-    ::placeholder {
-        color: #64748b !important;
-        opacity: 1 !important;
-    }
-</style>
+    <!-- HEADER RESPONSIVO CON ACCIONES -->
     <header class="w-full border-b border-slate-800 backdrop-blur-md bg-darkbg/80 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
             <div class="flex items-center space-x-2.5">
                 <div id="nav-logo-container" class="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center shadow-lg overflow-hidden border border-slate-700">
-                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
                 </div>
                 <div>
-                    <span id="nav-store-name" class="text-sm sm:text-lg font-bold tracking-tight text-white block truncate max-w-[120px] sm:max-w-xs">Mi Tienda</span>
+                    <span id="nav-store-name" class="text-sm sm:text-lg font-bold tracking-tight text-white block truncate max-w-[110px] sm:max-w-xs">Mi Tienda</span>
                     <span class="text-[10px] sm:text-xs text-slate-400">Cloudflare Edge</span>
                 </div>
             </div>
@@ -85,19 +99,22 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 flex-grow w-full space-y-6 sm:space-y-10">
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-3 sm:px-6 py-5 sm:py-10 flex-grow w-full space-y-6 sm:space-y-10">
         
         <!-- PANTALLA DE BLOQUEO / SUSCRIPCIÓN VENCIDA -->
-        <section id="pantalla-suscripcion-vencida" class="hidden max-w-xl mx-auto my-12 bg-cardbg border border-rose-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
+        <section id="pantalla-suscripcion-vencida" class="hidden max-w-xl mx-auto my-6 sm:my-12 bg-cardbg border border-rose-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
             <div class="w-16 h-16 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/20 shadow-inner">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
             </div>
             
             <div class="space-y-2">
                 <span class="px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
                     Suscripción Inactiva
                 </span>
-                <h2 class="text-2xl font-black text-white">Tu tienda está suspendida</h2>
+                <h2 class="text-xl sm:text-2xl font-black text-white">Tu tienda está suspendida</h2>
                 <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
                     El periodo de vigencia ha expirado. Elige tu plan ($5 mensual, $14 trimestral o $40 anual) para reactivar tu acceso de forma inmediata.
                 </p>
@@ -113,7 +130,9 @@
         <!-- BANNER DE ALERTA DE DÍAS -->
         <div id="alerta-suscripcion-banner" class="hidden rounded-2xl p-4 shadow-lg border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center space-x-3">
-                <svg class="w-6 h-6 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <svg class="w-6 h-6 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
                 <div>
                     <h4 id="alerta-sus-titulo" class="text-xs sm:text-sm font-bold text-white m-0">Aviso de Suscripción</h4>
                     <p id="alerta-sus-texto" class="text-[11px] sm:text-xs text-slate-300 m-0 mt-0.5">Tus días solventes están por agotarse.</p>
@@ -125,17 +144,17 @@
             <span id="sync-message">Cambios sincronizados correctamente.</span>
         </div>
 
-        <!-- CONTENEDOR DE TRABAJO -->
+        <!-- CONTENEDOR DE TRABAJO ACTIVO -->
         <div id="contenedor-panel-activo" class="space-y-6 sm:space-y-10">
             
             <!-- TARJETA DE ENLACE DE LA VITRINA -->
-            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
-                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
-                        <h2 class="text-base sm:text-lg font-black text-white">Tu Enlace de Vitrina</h2>
-                        <p class="text-xs text-slate-400">Comparte este enlace con tus clientes para que puedan ver tu catálogo y hacerte pedidos.</p>
+                        <h2 class="text-base sm:text-lg font-black text-white m-0">Tu Enlace de Vitrina</h2>
+                        <p class="text-xs text-slate-400 m-0 mt-0.5">Comparte este enlace con tus clientes para que puedan ver tu catálogo y pedirte por WhatsApp.</p>
                     </div>
-                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Activo en Cloudflare</span>
+                    <span class="inline-self-start sm:inline-self-auto px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Activo en Edge</span>
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
@@ -144,10 +163,10 @@
                     </div>
                     
                     <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
-                        <button onclick="copiarEnlaceTienda()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-1.5 border border-slate-700 shadow-sm">
+                        <button onclick="copiarEnlaceTienda()" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-1.5 border border-slate-700 shadow-sm">
                             Copiar
                         </button>
-                        <button onclick="compartirEnlaceTienda()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-1.5 shadow-md">
+                        <button onclick="compartirEnlaceTienda()" class="flex-1 sm:flex-none bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3 px-4 rounded-xl transition text-xs flex items-center justify-center gap-1.5 shadow-md">
                             Compartir
                         </button>
                     </div>
@@ -155,7 +174,7 @@
             </section>
 
             <!-- SECCIÓN DE LOS 3 PLANES -->
-            <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                 <!-- 1. Plan Mensual Pro -->
                 <div class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl space-y-3 flex flex-col justify-between">
                     <div>
@@ -198,22 +217,22 @@
                 </div>
             </section>
 
-            <!-- TARJETA DE ESTADO Y MÉTODOS DE PAGO CON VISOR QR INTERACTIVO -->
-            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-4">
-                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+            <!-- METODOS DE PAGO CON VISOR QR INTERACTIVO -->
+            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
-                        <h2 class="text-base sm:text-lg font-black text-white">Métodos de Pago y Códigos QR</h2>
-                        <p class="text-xs text-slate-400">Consulta los datos para tu plan elegido ($5, $14 o $40). Haz clic en cualquier QR para ampliarlo.</p>
+                        <h2 class="text-base sm:text-lg font-black text-white m-0">Métodos de Pago y Códigos QR</h2>
+                        <p class="text-xs text-slate-400 m-0 mt-0.5">Consulta los datos para tu plan elegido ($5, $14 o $40). Haz clic en cualquier QR para ampliarlo.</p>
                     </div>
-                    <span id="badge-dias-panel" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">-- Días Solventes</span>
+                    <span id="badge-dias-panel" class="inline-self-start sm:inline-self-auto px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">-- Días Solventes</span>
                 </div>
 
-                <!-- PESTAÑAS O BOTONES DE SELECCIÓN -->
-                <div class="flex flex-wrap gap-2 pt-2">
-                    <button onclick="cambiarVisorPago('mercantil')" id="btn-tab-mercantil" class="flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md">
+                <!-- PESTAÑAS O BOTONES DE SELECCIÓN DE PAGO -->
+                <div class="flex flex-col sm:flex-row gap-2 pt-2">
+                    <button onclick="cambiarVisorPago('mercantil')" id="btn-tab-mercantil" class="w-full sm:flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md">
                         🏦 Pago Móvil Mercantil (QR)
                     </button>
-                    <button onclick="cambiarVisorPago('binance')" id="btn-tab-binance" class="flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800">
+                    <button onclick="cambiarVisorPago('binance')" id="btn-tab-binance" class="w-full sm:flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800">
                         💎 Binance Pay (QR)
                     </button>
                 </div>
@@ -230,7 +249,7 @@
                                 <p><strong>Montos:</strong> <span class="text-emerald-400 font-bold">$5 (Mensual) | $14 (Trimestral) | $40 (Anual)</span></p>
                             </div>
                             <div>
-                                <button onclick="copiarDatosPagoMovil()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 text-xs font-bold py-2 px-3.5 rounded-xl transition shadow-sm flex items-center gap-1.5">
+                                <button onclick="copiarDatosPagoMovil()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 text-xs font-bold py-2.5 px-4 rounded-xl transition shadow-sm flex items-center justify-center gap-1.5">
                                     📋 Copiar todos los datos de Pago Móvil
                                 </button>
                             </div>
@@ -269,23 +288,23 @@
             </section>
 
             <!-- CONFIGURACIÓN GENERAL -->
-            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
+            <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl space-y-6">
                 <div class="border-b border-slate-800 pb-4">
-                    <h2 class="text-lg sm:text-xl font-black text-white">Configuración General</h2>
-                    <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Personaliza la identidad visual y marca de tu negocio.</p>
+                    <h2 class="text-lg sm:text-xl font-black text-white m-0">Configuración General</h2>
+                    <p class="text-xs sm:text-sm text-slate-400 m-0 mt-0.5">Personaliza la identidad visual y marca de tu negocio.</p>
                 </div>
 
-                <form id="form-config-tienda" onsubmit="guardarConfiguracionTienda(event)" class="row g-4">
-                    <div class="col-md-7">
-                        <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider">Nombre de la Tienda</label>
-                        <input type="text" id="config-nombre" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-2.5 text-sm">
+                <form id="form-config-tienda" onsubmit="guardarConfiguracionTienda(event)" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-7">
+                        <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Nombre de la Tienda</label>
+                        <input type="text" id="config-nombre" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-3 text-sm">
                     </div>
-                    <div class="col-md-5">
-                        <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider">WhatsApp de Pedidos</label>
-                        <input type="text" id="config-whatsapp" placeholder="584125941381" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-2.5 text-sm">
+                    <div class="md:col-span-5">
+                        <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">WhatsApp de Pedidos</label>
+                        <input type="text" id="config-whatsapp" placeholder="584125941381" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl py-3 text-sm">
                     </div>
 
-                    <div class="col-12">
+                    <div class="md:col-span-12">
                         <label class="form-label text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Logotipo de la Tienda</label>
                         <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-amber-500 rounded-2xl p-4 sm:p-6 text-center bg-slate-900/50 transition cursor-pointer flex flex-col items-center justify-center space-y-3 relative overflow-hidden">
                             <input type="file" id="file-logo-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
@@ -301,53 +320,52 @@
                         </div>
                     </div>
 
-                    <div class="col-12 text-end pt-2">
-                        <button type="submit" id="btn-guardar-tienda" class="btn btn-warning fw-bold w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg">
+                    <div class="md:col-span-12 text-end pt-2">
+                        <button type="submit" id="btn-guardar-tienda" class="btn btn-warning fw-bold w-full sm:w-auto px-6 py-3 rounded-xl text-xs sm:text-sm shadow-lg">
                             Guardar Cambios
                         </button>
                     </div>
                 </form>
             </section>
 
-            <!-- GESTIÓN DE PRODUCTOS (HÍBRIDO: TARJETAS EN MÓVIL / TABLA EN PC) -->
+            <!-- GESTIÓN DE PRODUCTOS -->
             <section class="bg-cardbg border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl space-y-5 sm:space-y-6">
                 <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 border-b border-slate-800 pb-4">
                     <div>
                         <h2 class="text-lg sm:text-xl font-black text-white m-0">Catálogo de Productos</h2>
                         <p class="text-xs sm:text-sm text-slate-400 m-0 mt-0.5">Agrega o edita los artículos de tu inventario.</p>
                     </div>
-                    <button onclick="abrirModalProducto()" class="btn btn-warning fw-bold text-dark px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg w-full sm:w-auto">
-                        + Nuevo Producto
+                    <button onclick="abrirModalProducto()" class="btn btn-warning fw-bold text-dark px-4 py-3 rounded-xl text-xs sm:text-sm shadow-lg w-full sm:w-auto">
+                        ✨ Nuevo Producto
                     </button>
                 </div>
 
-                <!-- VISTA MÓVIL: TARJETAS VERTICALES COMPACTAS (SIN SCROLL LATERAL) -->
+                <!-- VISTA MÓVIL: TARJETAS -->
                 <div id="cards-productos-movil" class="block md:hidden space-y-3"></div>
 
-                <!-- VISTA ESCRITORIO / TABLET: TABLA CLÁSICA COMPLETA -->
-                <div class="hidden md:block table-responsive">
-                    <table class="table table-dark table-hover align-middle mb-0 bg-transparent text-sm">
-                        <thead class="text-secondary uppercase text-xs">
+                <!-- VISTA ESCRITORIO: TABLA -->
+                <div class="hidden md:block w-full overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/40">
+                    <table class="w-full text-left text-xs sm:text-sm text-slate-300 min-w-[650px]">
+                        <thead class="bg-slate-900 text-slate-400 font-semibold uppercase text-xs border-b border-slate-800">
                             <tr>
-                                <th class="py-3 px-3">Producto</th>
-                                <th class="py-3 px-3">Categoría</th>
-                                <th class="py-3 px-3">Precio</th>
-                                <th class="py-3 px-3">Detalles</th>
-                                <th class="py-3 px-3 text-end">Acciones</th>
+                                <th class="py-3 px-4">Producto</th>
+                                <th class="py-3 px-4">Categoría</th>
+                                <th class="py-3 px-4">Precio</th>
+                                <th class="py-3 px-4">Detalles</th>
+                                <th class="py-3 px-4 text-end">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-productos-admin" class="border-top-0"></tbody>
+                        <tbody id="tabla-productos-admin" class="divide-y divide-slate-800/60"></tbody>
                     </table>
                 </div>
             </section>
         </div>
     </main>
 
-    <!-- MODAL DE BIENVENIDA Y SELECCIÓN DE PLANES -->
+    <!-- MODAL DE BIENVENIDA -->
     <div class="modal fade" id="modalBienvenidaAdmin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content bg-cardbg border border-amber-500/30 text-white rounded-3xl p-4 sm:p-6 shadow-2xl space-y-6">
-                
+        <div class="modal-dialog modal-dialog-centered modal-lg px-2 sm:px-0">
+            <div class="modal-content bg-cardbg border border-amber-500/30 text-white rounded-3xl p-4 sm:p-6 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
                 <div class="text-center space-y-2 pt-2">
                     <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-widest">
                         🚀 ¡Bienvenido a MultiStore Cloud!
@@ -359,102 +377,99 @@
                 </div>
 
                 <div class="text-center pt-2">
-                    <button onclick="cerrarModalBienvenida()" class="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-dark font-black py-3 px-8 rounded-xl transition shadow-lg text-xs sm:text-sm">
+                    <button onclick="cerrarModalBienvenida()" class="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-dark font-black py-3.5 px-8 rounded-xl transition shadow-lg text-xs sm:text-sm">
                         ¡Entendido, ir a mi Panel de Administración! 🚀
                     </button>
                 </div>
-
             </div>
         </div>
     </div>
 
     <!-- MODAL PARA AMPLIAR CÓDIGO QR -->
     <div class="modal fade" id="modalQrGrande" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content bg-cardbg border border-slate-800 text-white rounded-3xl p-4 shadow-2xl text-center space-y-4">
+        <div class="modal-dialog modal-dialog-centered modal-sm px-2 sm:px-0">
+            <div class="modal-content bg-cardbg border border-slate-800 text-white rounded-3xl p-4 shadow-2xl text-center space-y-4 max-h-[90vh] overflow-y-auto">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                     <h5 id="modal-qr-titulo" class="text-sm font-bold text-amber-400 m-0">Código QR</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="bg-white p-3 rounded-2xl shadow-inner border border-slate-700 inline-block mx-auto">
-                    <img id="img-qr-modal" src="" alt="Código QR Ampliado" class="w-64 h-64 object-contain rounded-xl">
+                    <img id="img-qr-modal" src="" alt="Código QR Ampliado" class="w-48 h-48 sm:w-64 sm:h-64 object-contain rounded-xl">
                 </div>
                 <p class="text-[11px] text-slate-400">Escanea este código desde tu aplicación bancaria o billetera.</p>
             </div>
         </div>
     </div>
 
-    <!-- MODAL PRODUCTO CON CAMPOS DINÁMICOS POR CATEGORÍA -->
+    <!-- MODAL PRODUCTO -->
     <div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content bg-cardbg border border-slate-800 text-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-2xl">
-                <div class="modal-header border-bottom border-slate-800">
-                    <h5 class="modal-title fw-bold text-base" id="modal-titulo">Nuevo Producto</h5>
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable px-2 sm:px-0">
+            <div class="modal-content bg-cardbg border border-slate-800 text-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+                <div class="modal-header border-b border-slate-800 pb-2">
+                    <h5 class="modal-title font-bold text-base text-white" id="modal-titulo">Nuevo Producto</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form id="form-producto" onsubmit="guardarProductoModal(event)" class="row g-3">
+                <div class="modal-body pt-3">
+                    <form id="form-producto" onsubmit="guardarProductoModal(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <input type="hidden" id="prod-index" value="-1">
-                        
-                        <div class="col-12">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Nombre del Producto</label>
-                            <input type="text" id="prod-nombre" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+
+                        <div class="sm:col-span-2">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase mb-1">Nombre del Producto</label>
+                            <input type="text" id="prod-nombre" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm py-2.5">
                         </div>
 
-                        <!-- Selector de Categoría Principal -->
-                        <div class="col-12">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Categoría</label>
-                            <select id="prod-categoria" onchange="cambiarCamposCategoria()" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                        <div class="sm:col-span-2">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase mb-1">Categoría</label>
+                            <select id="prod-categoria" onchange="cambiarCamposCategoria()" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm py-2.5">
                                 <option value="prendas">Prendas y Ropa</option>
                                 <option value="calzado">Calzado</option>
                                 <option value="accesorios">Accesorios y Otros</option>
                             </select>
                         </div>
                         
-                        <div class="col-6">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Precio ($)</label>
-                            <input type="number" step="0.01" id="prod-precio" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                        <div>
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase mb-1">Precio ($)</label>
+                            <input type="number" step="0.01" id="prod-precio" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm py-2.5">
                         </div>
 
-                        <!-- Campos Dinámicos según la Categoría -->
-                        <div class="col-6" id="contenedor-tallas-prendas">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Tallas (Ropa)</label>
-                            <input type="text" id="prod-tallas" placeholder="Ej: S, M, L, XL" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                        <div id="contenedor-tallas-prendas">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase mb-1">Tallas (Ropa)</label>
+                            <input type="text" id="prod-tallas" placeholder="Ej: S, M, L, XL" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm py-2.5">
                         </div>
 
-                        <div class="col-6 hidden" id="contenedor-tallas-calzado">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Tallas (Calzado)</label>
-                            <input type="text" id="prod-tallas-calzado" placeholder="Ej: 38, 39, 40, 42" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                        <div class="hidden" id="contenedor-tallas-calzado">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase mb-1">Tallas (Calzado)</label>
+                            <input type="text" id="prod-tallas-calzado" placeholder="Ej: 38, 39, 40, 42" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm py-2.5">
                         </div>
 
-                        <div class="col-6 hidden" id="contenedor-especificacion-accesorio">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Especificación / Material</label>
-                            <input type="text" id="prod-especificacion" placeholder="Ej: Acero, Ajustable" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                        <div class="hidden" id="contenedor-especificacion-accesorio">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase mb-1">Especificación / Material</label>
+                            <input type="text" id="prod-especificacion" placeholder="Ej: Acero, Ajustable" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm py-2.5">
                         </div>
                         
-                        <div class="col-12">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Colores Disponibles</label>
-                            <input type="text" id="prod-colores" placeholder="Ej: Negro, Blanco, Dorado" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm">
+                        <div class="sm:col-span-2">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase mb-1">Colores Disponibles</label>
+                            <input type="text" id="prod-colores" placeholder="Ej: Negro, Blanco, Dorado" required class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm py-2.5">
                         </div>
 
-                        <div class="col-12">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Foto del Producto</label>
+                        <div class="sm:col-span-2">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase mb-1">Foto del Producto</label>
                             <input type="file" id="prod-file-input" accept="image/*" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-xs py-2">
                         </div>
 
-                        <div class="col-12 text-center">
+                        <div class="sm:col-span-2 text-center">
                             <div id="prod-img-preview-box" class="hidden mt-1 p-2 bg-slate-900/60 rounded-xl border border-slate-800 inline-block">
                                 <img id="prod-img-preview" class="w-16 h-16 object-cover rounded-lg mx-auto shadow-sm">
                             </div>
                         </div>
                         <input type="hidden" id="prod-imagen-base64">
 
-                        <div class="col-12">
-                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase">Descripción</label>
+                        <div class="sm:col-span-2">
+                            <label class="form-label text-[11px] font-semibold text-slate-400 uppercase mb-1">Descripción</label>
                             <textarea id="prod-descripcion" rows="2" class="form-control bg-slate-900 border-slate-800 text-white rounded-xl text-sm"></textarea>
                         </div>
 
-                        <div class="col-12 text-end pt-3 flex gap-2 justify-end">
+                        <div class="sm:col-span-2 text-end pt-3 flex gap-2 justify-end">
                             <button type="button" class="btn btn-secondary rounded-xl px-4 text-xs" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" id="btn-guardar-prod" class="btn btn-warning fw-bold rounded-xl px-4 text-dark text-xs">Guardar</button>
                         </div>
@@ -464,10 +479,12 @@
         </div>
     </div>
 
+    <!-- FOOTER -->
     <footer class="w-full border-t border-slate-800 py-6 text-center text-xs text-slate-500">
         Panel Cloudflare Edge &copy; 2026.
     </footer>
 
+    <!-- JS LIBS Y CONTROLADORES -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
     <script>
@@ -486,7 +503,7 @@
             modalBootstrap = new bootstrap.Modal(document.getElementById('modalProducto'));
             modalQrBootstrap = new bootstrap.Modal(document.getElementById('modalQrGrande'));
             modalBienvenidaBootstrap = new bootstrap.Modal(document.getElementById('modalBienvenidaAdmin'));
-            
+
             configurarDragAndDropLogo();
             configurarInputProductoFoto();
             await cargarPanelAdmin();
@@ -520,13 +537,13 @@
             if (metodo === 'mercantil') {
                 visorMercantil.classList.remove('hidden');
                 visorBinance.classList.add('hidden');
-                btnMercantil.className = "flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md";
-                btnBinance.className = "flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800";
+                btnMercantil.className = "w-full sm:flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md";
+                btnBinance.className = "w-full sm:flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800";
             } else {
                 visorBinance.classList.remove('hidden');
                 visorMercantil.classList.add('hidden');
-                btnBinance.className = "flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md";
-                btnMercantil.className = "flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800";
+                btnBinance.className = "w-full sm:flex-1 bg-amber-500 text-dark font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-md";
+                btnMercantil.className = "w-full sm:flex-1 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition border border-slate-800";
             }
         }
 
@@ -562,8 +579,8 @@
                 if (!tienda) {
                     alert("Sesión no encontrada o expirada para esta tienda.");
                     localStorage.removeItem('sesion_vendedor');
-                    window.location.href = 'login.html'; 
-                    return; 
+                    window.location.href = 'login.html';
+                    return;
                 }
 
                 tiendaSlug = slugReal;
@@ -603,7 +620,9 @@
                 const mensajeWaPanel = encodeURIComponent(`Hola Maestro, soy el administrador de la tienda @${tiendaSlug}. Realicé el pago de mi renovación de suscripción. Adjunto mi comprobante.`);
                 document.getElementById('link-panel-renovar-whatsapp').href = `https://wa.me/584125941381?text=${mensajeWaPanel}`;
 
-                if (tienda.bloqueado) {
+                const estaBloqueada = tienda.bloqueado === 1 || tienda.bloqueado === true;
+
+                if (estaBloqueada || diasRestantes <= 0) {
                     panelActivo.classList.add('hidden');
                     pantallaBloqueo.classList.remove('hidden');
                     banner.classList.add('hidden');
@@ -687,7 +706,7 @@
                 if (file) procesarArchivo(file, (base64) => {
                     base64ProductoTemp = base64;
                     document.getElementById('prod-imagen-base64').value = base64;
-                    
+
                     const box = document.getElementById('prod-img-preview-box');
                     const img = document.getElementById('prod-img-preview');
                     img.src = base64;
@@ -724,7 +743,7 @@
             try {
                 const db = await obtenerBaseDatos();
                 if (!db[tiendaSlug]) db[tiendaSlug] = {};
-                
+
                 db[tiendaSlug].nombreTienda = document.getElementById('config-nombre').value.trim();
                 db[tiendaSlug].whatsapp = document.getElementById('config-whatsapp').value.trim();
                 db[tiendaSlug].logoUrl = base64LogotipoTemp;
@@ -749,7 +768,7 @@
             const tienda = db[tiendaSlug];
             const tabla = document.getElementById('tabla-productos-admin');
             const cardsMovil = document.getElementById('cards-productos-movil');
-            
+
             tabla.innerHTML = "";
             cardsMovil.innerHTML = "";
 
@@ -769,45 +788,43 @@
                 if (categoriaBadge === 'calzado') detallesExtra = `Tallas: ${prod.tallasCalzado || 'N/D'}`;
                 if (categoriaBadge === 'accesorios') detallesExtra = `Material: ${prod.especificacion || 'N/D'}`;
 
-                // 1. RENDERIZADO DE TABLA (PANTALLAS GRANDES)
                 tabla.innerHTML += `
-                    <tr>
-                        <td class="py-3 px-3">
-                            <div class="d-flex align-items-center gap-2 sm:gap-3">
-                                <img src="${prod.url_imagen || ''}" class="rounded-2 object-fit-cover shrink-0" width="38" height="38">
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="py-3 px-4">
+                            <div class="flex items-center gap-3">
+                                <img src="${prod.url_imagen || ''}" class="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-700">
                                 <div class="min-w-0">
-                                    <span class="fw-bold text-white d-block text-xs sm:text-sm truncate">${prod.nombre}</span>
-                                    <small class="text-secondary text-[10px] sm:text-xs truncate d-block" style="max-width: 140px;">${prod.descripcion || ''}</small>
+                                    <span class="font-bold text-white block text-xs sm:text-sm truncate">${prod.nombre}</span>
+                                    <small class="text-slate-400 text-[11px] truncate block max-w-[140px]">${prod.descripcion || ''}</small>
                                 </div>
                             </div>
                         </td>
-                        <td class="py-3 px-3">
+                        <td class="py-3 px-4">
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-amber-400 uppercase border border-slate-700">${categoriaBadge}</span>
                         </td>
-                        <td class="py-3 px-3 fw-bold text-success text-xs sm:text-sm">$${parseFloat(prod.precio || 0).toFixed(2)}</td>
-                        <td class="py-3 px-3 text-secondary text-[11px]">${detallesExtra} <br> Colores: ${prod.colores || 'Varios'}</td>
-                        <td class="py-3 px-3 text-end">
-                            <div class="flex items-center justify-end gap-1">
-                                <button onclick="abrirModalProducto(${index})" class="btn btn-outline-warning btn-sm rounded-pill px-2.5 py-1 text-[10px] sm:text-xs">Editar</button>
-                                <button onclick="eliminarProducto(${index})" class="btn btn-outline-danger btn-sm rounded-pill px-2.5 py-1 text-[10px] sm:text-xs">Borrar</button>
+                        <td class="py-3 px-4 font-bold text-emerald-400 text-xs sm:text-sm">$${parseFloat(prod.precio || 0).toFixed(2)}</td>
+                        <td class="py-3 px-4 text-slate-300 text-[11px]">${detallesExtra} <br> Colores: ${prod.colores || 'Varios'}</td>
+                        <td class="py-3 px-4 text-end">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <button onclick="abrirModalProducto(${index})" class="btn btn-outline-warning btn-sm rounded-xl px-2.5 py-1 text-[11px]">Editar</button>
+                                <button onclick="eliminarProducto(${index})" class="btn btn-outline-danger btn-sm rounded-xl px-2.5 py-1 text-[11px]">Borrar</button>
                             </div>
                         </td>
                     </tr>
                 `;
 
-                // 2. RENDERIZADO DE TARJETAS (PANTALLAS MÓVILES - CERO SCROLL HORIZONTAL)
                 cardsMovil.innerHTML += `
                     <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 space-y-3 shadow-md">
                         <div class="flex items-start gap-3">
                             <img src="${prod.url_imagen || ''}" class="w-14 h-14 rounded-xl object-cover shrink-0 border border-slate-700">
-                            
+
                             <div class="min-w-0 flex-grow">
                                 <div class="flex items-start justify-between gap-2">
                                     <h4 class="text-sm font-bold text-white truncate m-0">${prod.nombre}</h4>
                                     <span class="text-sm font-black text-emerald-400 shrink-0">$${parseFloat(prod.precio || 0).toFixed(2)}</span>
                                 </div>
                                 <p class="text-[11px] text-slate-400 line-clamp-1 m-0 mt-0.5">${prod.descripcion || 'Sin descripción'}</p>
-                                
+
                                 <div class="flex items-center gap-2 mt-1.5 flex-wrap">
                                     <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-amber-400 uppercase border border-slate-700">${categoriaBadge}</span>
                                     <span class="text-[10px] text-slate-400 truncate">${detallesExtra} • ${prod.colores || 'Varios'}</span>
@@ -817,10 +834,10 @@
 
                         <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/80">
                             <button onclick="abrirModalProducto(${index})" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold py-2 px-3 rounded-xl text-xs transition border border-amber-500/20 flex items-center justify-center gap-1 shadow-sm">
-                                 Editar
+                                Editar
                             </button>
                             <button onclick="eliminarProducto(${index})" class="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-bold py-2 px-3 rounded-xl text-xs transition border border-rose-500/20 flex items-center justify-center gap-1 shadow-sm">
-                                 Borrar
+                                Borrar
                             </button>
                         </div>
                     </div>
@@ -849,7 +866,7 @@
                 document.getElementById('prod-especificacion').value = prod.especificacion || '';
                 document.getElementById('prod-colores').value = prod.colores;
                 document.getElementById('prod-descripcion').value = prod.descripcion;
-                
+
                 base64ProductoTemp = prod.url_imagen || "";
                 document.getElementById('prod-imagen-base64').value = prod.url_imagen || "";
                 document.getElementById('prod-img-preview').src = prod.url_imagen || "";
@@ -929,7 +946,7 @@
                 try {
                     const db = await obtenerBaseDatos();
                     const tienda = db[tiendaSlug];
-                    
+
                     if (!tienda || !tienda.productos || !tienda.productos[index]) {
                         alert("Producto no encontrado.");
                         return;
@@ -960,7 +977,7 @@
 
         function cerrarSesion() {
             localStorage.removeItem('sesion_vendedor');
-            window.location.href = 'index.html';
+            window.location.href = 'login.html';
         }
 
         function mostrarAlertaSync(mensaje) {
@@ -971,6 +988,5 @@
             setTimeout(() => { alerta.classList.add('d-none'); }, 3000);
         }
     </script>
-    
 </body>
 </html>
