@@ -9,11 +9,11 @@
     if (paginaActual === "superadmin.html") {
         const sesionSuper = localStorage.getItem("sesion_superadmin");
         if (!sesionSuper) {
-            // Mensaje más claro y descriptivo para el usuario
-            alert("⚠️ Acceso Restringido: Esta sección es exclusiva para el Superadministrador de la plataforma.");
+            alert("Acceso denegado: Se requiere rol de Superadministrador.");
             window.location.href = "login.html";
             return;
         }
+        // Si existe la sesión de superadmin, permitimos el paso libre
         return;
     }
 
@@ -21,12 +21,14 @@
     if (paginaActual === "admin.html" || paginaActual === "admin_2.html") {
         const tiendaSlug = localStorage.getItem("sesion_vendedor");
 
+        // Verificar si existe el token de sesión del vendedor
         if (!tiendaSlug) {
-            alert("⚠️ Acceso Denegado: Debe iniciar sesión con el identificador de su tienda para administrar el panel.");
+            alert("Acceso denegado: Debe iniciar sesión con su tienda para acceder al panel.");
             window.location.href = "login.html";
             return;
         }
 
+        // Validación cruzada de la base de datos (Cloudflare / LocalStorage) para chequear bloqueo o vencimiento
         try {
             const dbLocal = localStorage.getItem("multi_tiendas_db");
             if (dbLocal) {
@@ -34,7 +36,10 @@
                 const tienda = db[tiendaSlug.trim().toLowerCase()];
 
                 if (tienda) {
+                    // Verificar si la tienda está bloqueada por suscripción vencida
                     if (tienda.bloqueado === true || Number(tienda.diasSolventes) <= 0) {
+                        // Si ya está en la pantalla de vencido o el panel, el script de admin se encarga 
+                        // de mostrar la vista de renovación, pero aquí podemos forzar una alerta si intentan evadirlo.
                         console.warn("Aviso de seguridad: La tienda tiene la suscripción inactiva.");
                     }
                 }
