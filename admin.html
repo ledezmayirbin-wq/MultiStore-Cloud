@@ -699,21 +699,31 @@
             });
         }
 
-        function configurarInputProductoFoto() {
-            const fileInput = document.getElementById('prod-file-input');
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) procesarArchivo(file, (base64) => {
-                    base64ProductoTemp = base64;
-                    document.getElementById('prod-imagen-base64').value = base64;
+       function configurarInputProductoFoto() {
+    const fileInput = document.getElementById('prod-file-input');
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validamos que sea una imagen
+            if (!file.type.startsWith('image/')) {
+                alert('Por favor selecciona una imagen válida.');
+                return;
+            }
 
-                    const box = document.getElementById('prod-img-preview-box');
-                    const img = document.getElementById('prod-img-preview');
-                    img.src = base64;
-                    box.classList.remove('hidden');
-                });
-            });
+            // SIMULACIÓN DE URL O RUTA LIGERA (Evita saturar localStorage con Base64 pesado)
+            // Aquí puedes usar un objeto URL temporal o la ruta pública de tu servidor/CDN
+            const urlTemporalImg = URL.createObjectURL(file);
+            
+            base64ProductoTemp = urlTemporalImg; // Guardamos la referencia ligera
+            document.getElementById('prod-imagen-base64').value = urlTemporalImg;
+
+            const box = document.getElementById('prod-img-preview-box');
+            const img = document.getElementById('prod-img-preview');
+            img.src = urlTemporalImg;
+            box.classList.remove('hidden');
         }
+    });
+}
 
         function procesarArchivo(file, callback) {
             if (!file.type.startsWith('image/')) {
@@ -884,63 +894,66 @@
             modalBootstrap.show();
         }
 
-        async function guardarProductoModal(event) {
-            event.preventDefault();
-            const btn = document.getElementById('btn-guardar-prod');
-            btn.disabled = true;
-            btn.textContent = "Guardando...";
+async function guardarProductoModal(event) {
+    event.preventDefault();
+    const btn = document.getElementById('btn-guardar-prod');
+    btn.disabled = true;
+    btn.textContent = "Guardando...";
 
-            try {
-                const index = parseInt(document.getElementById('prod-index').value);
-                const imagenFinal = document.getElementById('prod-imagen-base64').value || base64ProductoTemp;
+    try {
+        const index = parseInt(document.getElementById('prod-index').value);
+        const imagenFinal = document.getElementById('prod-imagen-base64').value || base64ProductoTemp;
 
-                if (!imagenFinal) {
-                    alert("Por favor, selecciona una imagen para el producto.");
-                    btn.disabled = false;
-                    btn.textContent = "Guardar";
-                    return;
-                }
-
-                const db = await obtenerBaseDatos();
-                if (!db[tiendaSlug]) db[tiendaSlug] = {};
-                if (!db[tiendaSlug].productos) db[tiendaSlug].productos = [];
-
-                const productoExistente = (index > -1 && db[tiendaSlug].productos[index]) ? db[tiendaSlug].productos[index] : null;
-                const categoriaSeleccionada = document.getElementById('prod-categoria').value;
-
-                const nuevoProd = {
-                    id: productoExistente ? productoExistente.id : undefined,
-                    nombre: document.getElementById('prod-nombre').value.trim(),
-                    categoria: categoriaSeleccionada,
-                    precio: parseFloat(document.getElementById('prod-precio').value),
-                    tallas: categoriaSeleccionada === 'prendas' ? document.getElementById('prod-tallas').value.trim() : '',
-                    tallasCalzado: categoriaSeleccionada === 'calzado' ? document.getElementById('prod-tallas-calzado').value.trim() : '',
-                    especificacion: categoriaSeleccionada === 'accesorios' ? document.getElementById('prod-especificacion').value.trim() : '',
-                    colores: document.getElementById('prod-colores').value.trim(),
-                    url_imagen: imagenFinal,
-                    descripcion: document.getElementById('prod-descripcion').value.trim()
-                };
-
-                const response = await fetch(`${API_BASE_URL}/guardar-producto`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tiendaSlug: tiendaSlug, producto: nuevoProd })
-                });
-
-                if (!response.ok) throw new Error("Error al guardar el producto en la nube.");
-
-                modalBootstrap.hide();
-                mostrarAlertaSync("¡Producto guardado correctamente!");
-                await renderizarTablaProductos();
-
-            } catch (err) {
-                alert("Error al guardar producto: " + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Guardar";
-            }
+        if (!imagenFinal) {
+            alert("Por favor, selecciona una imagen para el producto.");
+            btn.disabled = false;
+            btn.textContent = "Guardar";
+            return;
         }
 
+        // Captura directa y limpia del selector de categoría
+        const selectCat = document.getElementById('prod-categoria');
+        const categoriaSeleccionada = selectCat ? selectCat.value : 'prendas';
+
+        const db = await obtenerBaseDatos();
+        if (!db[tiendaSlug]) db[tiendaSlug] = {};
+        if (!db[tiendaSlug].productos) db[tiendaSlug].productos = [];
+
+        const productoExistente = (index > -1 && db[tiendaSlug].productos[index]) ? db[tiendaSlug].productos[index] : null;
+
+        const nuevoProd = {
+            id: productoExistente ? productoExistente.id : undefined,
+            nombre: document.getElementById('prod-nombre').value.trim(),
+            categoria: categoriaSeleccionada, // <-- Envía estrictamente la categoría seleccionada ('calzado', 'prendas', 'accesorios')
+            precio: parseFloat(document.getElementById('prod-precio').value),
+            tallas: categoriaSeleccionada === 'prendas' ? document.getElementById('prod-tallas').value.trim() : '',
+            tallasCalzado: categoriaSeleccionada === 'calzado' ? document.getElementById('prod-tallas-calzado').value.trim() : '',
+            especificacion: categoriaSeleccionada === 'accesorios' ? document.getElementById('prod-especificacion').value.trim() : '',
+            colores: document.getElementById('prod-colores').value.trim(),
+            url_imagen: imagenFinal,
+            descripcion: document.getElementById('prod-descripcion').value.trim()
+        };
+
+        // Petición directa a Cloudflare Worker sin pasar por localStorage
+        const response = await fetch(`${API_BASE_URL}/guardar-producto`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tiendaSlug: tiendaSlug, producto: nuevoProd })
+        });
+
+        if (!response.ok) throw new Error("Error al guardar el producto en la nube.");
+
+        modalBootstrap.hide();
+        mostrarAlertaSync("¡Producto guardado en Cloudflare!");
+        await renderizarTablaProductos();
+
+    } catch (err) {
+        alert("Error al guardar producto: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "Guardar";
+    }
+}
         async function eliminarProducto(index) {
             if (confirm("¿Estás seguro de eliminar este producto?")) {
                 try {
